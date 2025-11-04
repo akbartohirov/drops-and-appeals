@@ -20,7 +20,29 @@ const app = express();
 
 app.use(cors());
 
-app.use(helmet());
+//app.use(helmet());
+app.use(helmet({
+    hsts: false,
+    contentSecurityPolicy: {
+        useDefaults: true,
+        directives: {
+            // DO NOT set upgrade-insecure-requests in dev
+            upgradeInsecureRequests: null,
+            defaultSrc: ["'self'"],
+            imgSrc: ["'self'", "data:", "blob:"],
+            styleSrc: ["'self'", "'unsafe-inline'"],
+            scriptSrc: ["'self'"],
+            connectSrc: ["'self'", "ws:", "wss:"],
+            objectSrc: ["'none'"],
+            baseUri: ["'self'"],
+            frameAncestors: ["'self'"]
+        }
+    },
+    // optional: disable other headers that cause surprises in dev
+    crossOriginOpenerPolicy: false,
+    crossOriginResourcePolicy: { policy: "same-origin" }
+}));
+
 app.use(express.json());
 app.use(morgan('dev'));
 

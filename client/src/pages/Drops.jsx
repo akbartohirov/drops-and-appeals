@@ -26,7 +26,7 @@ import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 
 // Agar sendagi api wrapper bo'lsa, undan foydalan. Bo'lmasa fetch'lar to'g'ri URL bilan ishlaydi
-// import { api } from '../api';
+import { api } from "../api";
 
 const API_BASE = import.meta.env?.VITE_API_BASE || "http://localhost:3000/api";
 
@@ -124,17 +124,12 @@ export default function Drops() {
   async function load() {
     setLoading(true);
     try {
-      const url = new URL(`${API_BASE}/drops`);
-      url.searchParams.set("page", "1");
-      url.searchParams.set("limit", "200");
-      if (q) url.searchParams.set("q", q); // backend qo'llasa ishlaydi; bo'lmasa front filter qiladi
-      const res = await fetch(url, { headers: authHeader(token) });
-      if (!res.ok) throw new Error("Yuklab bo‘lmadi");
-      const data = await res.json();
-      setRows(data.rows || []);
+      // api.js wrapper ishlatiladi — token va params api.request ichida hal qilinadi
+      const data = await api.listDrops(q || "", 1, 200);
+      setRows(data?.rows || []);
     } catch (e) {
       console.error(e);
-      alert(e.message || "Xatolik");
+      alert(e?.message || "Yuklab bo‘lmadi");
     } finally {
       setLoading(false);
     }
@@ -182,19 +177,13 @@ export default function Drops() {
         balance: addForm.balance === "" ? null : Number(addForm.balance),
         comment: addForm.comment || null,
       };
-      const res = await fetch(`${API_BASE}/drops`, {
-        method: "POST",
-        headers: { ...authHeader(token), "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) {
-        const e = await safeJson(res);
-        throw new Error(e?.error || "Saqlash xatosi");
-      }
+      // api.js wrapper ishlatilyapti
+      await api.createDrop(payload);
       setOpenAdd(false);
       await load();
     } catch (e) {
-      alert(e.message || "Xatolik");
+      console.error(e);
+      alert(e?.message || "Saqlash xatosi");
     }
   }
 
@@ -216,20 +205,14 @@ export default function Drops() {
         balance: editForm.balance === "" ? null : Number(editForm.balance),
         comment: editForm.comment || null,
       };
-      const res = await fetch(`${API_BASE}/drops/${editRow.id}`, {
-        method: "PATCH",
-        headers: { ...authHeader(token), "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) {
-        const e = await safeJson(res);
-        throw new Error(e?.error || "Saqlash xatosi");
-      }
+      // api.js wrapper ishlatilyapti
+      await api.updateDrop(editRow.id, payload);
       setOpenEdit(false);
       setEditRow(null);
       await load();
     } catch (e) {
-      alert(e.message || "Xatolik");
+      console.error(e);
+      alert(e?.message || "Saqlash xatosi");
     }
   }
 
@@ -237,18 +220,13 @@ export default function Drops() {
   async function onDelete(row) {
     if (!confirm(`O‘chirishni tasdiqlang (ID: ${row.id})`)) return;
     try {
-      const res = await fetch(`${API_BASE}/drops/${row.id}`, {
-        method: "DELETE",
-        headers: authHeader(token),
-      });
-      if (!res.ok) {
-        const e = await safeJson(res);
-        throw new Error(e?.error || "O‘chirish xatosi");
-      }
+      // api.js wrapper ishlatilyapti
+      await api.deleteDrop(row.id);
       // optimistik yangilash
       setRows((prev) => prev.filter((x) => x.id !== row.id));
     } catch (e) {
-      alert(e.message || "Xatolik");
+      console.error(e);
+      alert(e?.message || "O‘chirish xatosi");
     }
   }
 
@@ -261,23 +239,15 @@ export default function Drops() {
       alert("Faqat .csv fayl");
       return;
     }
-    const fd = new FormData();
-    fd.append("file", file);
     try {
-      const res = await fetch(`${API_BASE}/drops/import-csv`, {
-        method: "POST",
-        headers: authHeader(token), // FormData bo'lgani uchun Content-Type qo'ymaymiz
-        body: fd,
-      });
-      if (!res.ok) {
-        const e = await safeJson(res);
-        throw new Error(e?.error || "Import xatosi");
-      }
-      const data = await res.json();
-      alert(`Import OK: ${data.inserted} qator`);
+      const data = await api.importDropsCsv(file);
+      // backend turlicha maydon qaytarishi mumkin
+      const inserted = data?.inserted ?? data?.insertedCount ?? 0;
+      alert(`Import OK: ${inserted} qator`);
       await load();
     } catch (e) {
-      alert(e.message || "Xatolik");
+      console.error(e);
+      alert(e?.message || "Import xatosi");
     }
   }
 

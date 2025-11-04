@@ -66,21 +66,24 @@ export default function Users() {
     setLoading(true);
     setMsg("");
     try {
-      const response = await fetch("http://localhost:3000/api/users", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      const data = await response.json();
-      console.log("Fetched users:", data); // Debug log
-      setRows(Array.isArray(data) ? data : []); // Handle array response directly
+      const data = await api.listUsers();
+
+      if (Array.isArray(data)) {
+        setRows(data);
+      } else if (Array.isArray(data?.rows)) {
+        setRows(data.rows);
+      } else {
+        setRows([]);
+      }
     } catch (e) {
       console.error("Error loading users:", e);
-      setMsg(e.message || "Error loading users");
+      setMsg(e?.message || "Error loading users");
+      setRows([]);
     } finally {
       setLoading(false);
     }
   }
+
   useEffect(() => {
     load();
   }, []);
@@ -93,7 +96,8 @@ export default function Users() {
       setForm({ username: "", password: "" });
       await load();
     } catch (e) {
-      setMsg(e.message);
+      console.error("Create user error:", e);
+      setMsg(e?.message || "Create user error");
     }
   }
 
@@ -103,7 +107,8 @@ export default function Users() {
       await api.deleteUser(id);
       await load();
     } catch (e) {
-      setMsg(e.message);
+      console.error("Delete user error:", e);
+      setMsg(e?.message || "Delete user error");
     }
   }
 
@@ -142,7 +147,7 @@ export default function Users() {
           disableRowSelectionOnClick
           loading={loading}
           getRowId={(row) => row.id}
-          autoHeight // Add this prop
+          autoHeight
           sx={{
             "& .MuiDataGrid-cell:focus": {
               outline: "none",
