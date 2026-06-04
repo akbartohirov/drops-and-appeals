@@ -1,0 +1,8 @@
+/frontend/node_modules
+/frontend/dist
+/frontend/ui_docs
+
+/backend/node_modules
+/backend/data
+
+

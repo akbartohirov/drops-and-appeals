@@ -1,0 +1,487 @@
+<!DOCTYPE html><html lang="uz" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f7f9;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #c3c6d1;
+            border-radius: 10px;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-container": "#dde0e2",
+                      "on-tertiary-fixed": "#002113",
+                      "on-error": "#ffffff",
+                      "on-secondary-fixed-variant": "#434749",
+                      "surface-container-low": "#eef4ff",
+                      "on-primary-fixed": "#001b3c",
+                      "on-secondary": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "tertiary-container": "#003c27",
+                      "background": "#f8f9ff",
+                      "inverse-on-surface": "#eaf1ff",
+                      "primary": "#001e40",
+                      "on-primary-container": "#799dd6",
+                      "on-primary-fixed-variant": "#1f477b",
+                      "inverse-surface": "#27313e",
+                      "primary-container": "#003366",
+                      "surface-variant": "#d9e3f4",
+                      "on-error-container": "#93000a",
+                      "outline": "#737780",
+                      "primary-fixed": "#d5e3ff",
+                      "on-secondary-container": "#5f6365",
+                      "surface-container-high": "#dfe9fa",
+                      "outline-variant": "#c3c6d1",
+                      "error": "#ba1a1a",
+                      "primary-fixed-dim": "#a7c8ff",
+                      "surface": "#f8f9ff",
+                      "on-tertiary-container": "#00b27b",
+                      "surface-container": "#e5eeff",
+                      "surface-bright": "#f8f9ff",
+                      "surface-dim": "#d1dbec",
+                      "on-tertiary-fixed-variant": "#005236",
+                      "surface-container-highest": "#d9e3f4",
+                      "on-surface": "#121c28",
+                      "on-surface-variant": "#43474f",
+                      "secondary": "#5b5f61",
+                      "tertiary-fixed": "#6ffbbe",
+                      "secondary-fixed-dim": "#c4c7c9",
+                      "tertiary": "#002416",
+                      "inverse-primary": "#a7c8ff",
+                      "tertiary-fixed-dim": "#4edea3",
+                      "on-background": "#121c28",
+                      "surface-tint": "#3a5f94",
+                      "on-secondary-fixed": "#181c1e",
+                      "error-container": "#ffdad6",
+                      "on-tertiary": "#ffffff",
+                      "secondary-fixed": "#e0e3e5"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "stack-lg": "2rem",
+                      "container-padding": "2rem",
+                      "sidebar-width": "280px",
+                      "stack-sm": "0.5rem",
+                      "gutter": "1.5rem",
+                      "stack-md": "1rem"
+              },
+              "fontFamily": {
+                      "headline-sm": ["Inter"],
+                      "body-md": ["Inter"],
+                      "display-md": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "label-md": ["Inter"],
+                      "code-sm": ["Inter"],
+                      "body-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "display-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "label-md": ["13px", {"lineHeight": "18px", "fontWeight": "600"}],
+                      "code-sm": ["13px", {"lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- Side Navigation Shell -->
+<aside class="fixed left-0 top-0 h-screen w-sidebar-width bg-primary-container text-on-primary-fixed-variant border-r border-outline-variant flex flex-col h-full py-6 z-50">
+<div class="px-6 mb-8">
+<h1 class="font-display-md text-display-md font-bold text-white">Banking Admin</h1>
+<p class="font-body-md text-body-md text-on-primary-container/80">Boshqaruv tizimi</p>
+</div>
+<nav class="flex-grow">
+<ul class="space-y-1">
+<li class="">
+<a class="text-on-primary-fixed-variant hover:bg-primary-container hover:text-white px-6 py-3 flex items-center gap-3 transition-colors font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                        Boshqaruv paneli
+                    </a>
+</li>
+<li class="">
+<a class="text-on-primary-fixed-variant hover:bg-primary-container hover:text-white px-6 py-3 flex items-center gap-3 transition-colors font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">description</span>
+                        Murojaatlar
+                    </a>
+</li>
+<li class="">
+<a class="bg-secondary-container text-on-secondary-container border-l-4 border-tertiary-fixed-dim px-6 py-3 flex items-center gap-3 font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">credit_card_off</span>
+                        Drop kartalar
+                    </a>
+</li>
+<li class="">
+<a class="text-on-primary-fixed-variant hover:bg-primary-container hover:text-white px-6 py-3 flex items-center gap-3 transition-colors font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+                        Admin paneli
+                    </a>
+</li>
+</ul>
+</nav>
+<div class="px-6 mt-auto space-y-2 border-t border-white/10 pt-6">
+<a class="flex items-center gap-3 text-on-primary-fixed-variant hover:text-white transition-colors py-2 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">settings</span>
+                Sozlamalar
+            </a>
+<a class="flex items-center gap-3 text-on-primary-fixed-variant hover:text-white transition-colors py-2 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">logout</span>
+                Chiqish
+            </a>
+</div>
+</aside>
+<!-- Main Content Shell -->
+<main class="ml-sidebar-width min-h-screen flex flex-col">
+<!-- Top Navigation Bar -->
+<header class="flex justify-between items-center h-16 px-gutter bg-surface/80 backdrop-blur-md border-b border-outline-variant sticky top-0 z-40">
+<div class="flex items-center gap-4">
+<h2 class="font-headline-sm text-headline-sm font-semibold text-primary">Bank Boshqaruvi</h2>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-3">
+<div class="text-right">
+<p class="font-label-md text-label-md text-on-surface">Admin Ism</p>
+<p class="text-[11px] text-on-surface-variant leading-none">Super Administrator</p>
+</div>
+<img alt="Administrator profili" class="w-8 h-8 rounded-full bg-surface-container-highest" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2ilucMTISWmFXyrfP1jzo_TL2v-eAOeUifkWIXiTo5S3i-TZJUJVhCfZs6b1DAF0858XjM9_cQH5grX8JJaZfVQ7tSwmnRnBoh-SK7IjHXkllZGIdLPzAqOD4R5G1Ycq83ARiuYwjVGaHKck9qiALbQeAHfYpAAhvsvSCFDYfHh7USF2PlCRh0pV8LalN1ydeKYCSim_zO9ReARkqAX4pJDmLE6I-RjFOsoKW7aZx-HwzPMRY3k6185W7A8XZ0OqsjLcpul6HvxU">
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="p-container-padding flex-grow overflow-auto">
+<!-- Page Header -->
+<div class="mb-8 flex justify-between items-end">
+<div>
+<h1 class="font-display-lg text-display-lg font-bold text-primary">Drop kartalar reyestri</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Bloklangan va shubhali kartalarning markaziy ma'lumotlar bazasi</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 bg-white border border-outline-variant text-primary px-4 py-2.5 rounded-lg font-label-md text-label-md hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined">download</span>
+                        Eksport Excel
+                    </button>
+<button class="flex items-center gap-2 bg-error text-white px-4 py-2.5 rounded-lg font-label-md text-label-md hover:opacity-90 active:scale-95 transition-all shadow-sm">
+<span class="material-symbols-outlined">block</span>
+                        Yangi bloklash
+                    </button>
+</div>
+</div>
+<!-- Dashboard Analytics (Bento Grid Style) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-8">
+<div class="bg-white p-6 rounded-xl border border-outline-variant flex flex-col justify-between">
+<div>
+<p class="text-on-surface-variant font-label-md text-label-md mb-1">Jami bloklangan</p>
+<h3 class="text-display-md font-display-md text-primary">1,284</h3>
+</div>
+<div class="flex items-center gap-1 text-on-tertiary-fixed-variant mt-4 text-[13px] font-semibold">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+<span class="">+12% (oxirgi oy)</span>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl border border-outline-variant flex flex-col justify-between">
+<div>
+<p class="text-on-surface-variant font-label-md text-label-md mb-1">Shubhali tranzaksiyalar</p>
+<h3 class="text-display-md font-display-md text-primary">42</h3>
+</div>
+<div class="flex items-center gap-1 text-error mt-4 text-[13px] font-semibold">
+<span class="material-symbols-outlined text-[16px]">priority_high</span>
+<span class="">Yuqori xavf darajasi</span>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl border border-outline-variant flex flex-col justify-between">
+<div>
+<p class="text-on-surface-variant font-label-md text-label-md mb-1">Bloklangan mablag'lar</p>
+<h3 class="text-display-md font-display-md text-primary">245.8 mln</h3>
+</div>
+<p class="text-on-surface-variant mt-4 text-[13px]">O'rtacha 192k / karta</p>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant flex flex-col justify-between">
+<p class="text-primary font-bold font-label-md text-label-md mb-2">Tezkor filtr</p>
+<div class="flex flex-wrap gap-2">
+<span class="bg-primary text-white text-[11px] px-3 py-1 rounded-full cursor-pointer">Hammasi</span>
+<span class="bg-white text-on-surface-variant border border-outline-variant text-[11px] px-3 py-1 rounded-full cursor-pointer hover:bg-white/50">Humo</span>
+<span class="bg-white text-on-surface-variant border border-outline-variant text-[11px] px-3 py-1 rounded-full cursor-pointer hover:bg-white/50">UzCard</span>
+<span class="bg-white text-on-surface-variant border border-outline-variant text-[11px] px-3 py-1 rounded-full cursor-pointer hover:bg-white/50">Visa</span>
+</div>
+</div>
+</div>
+<!-- Registry Table Container -->
+<div class="bg-white rounded-xl border border-outline-variant overflow-hidden flex flex-col">
+<!-- Table Filters & Search -->
+<div class="p-5 border-b border-outline-variant flex flex-col md:flex-row justify-between items-center gap-4 bg-surface-container-lowest">
+<div class="flex items-center gap-4 w-full md:w-auto">
+<div class="relative w-full md:w-80">
+<span class="absolute inset-y-0 left-0 flex items-center pl-3 text-outline">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</span>
+<input class="w-full border border-outline-variant rounded-lg py-2 pl-10 pr-4 text-body-md focus:ring-2 focus:ring-primary-container outline-none transition-all" placeholder="Karta raqami yoki foydalanuvchi bo'yicha qidirish..." type="text">
+</div>
+<button class="flex items-center gap-2 text-on-surface-variant px-3 py-2 border border-outline-variant rounded-lg hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+<span class="text-label-md">Filtrlar</span>
+</button>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-body-md text-on-surface-variant">Sana oralig'i:</span>
+<div class="flex items-center bg-surface-container rounded-lg p-1 border border-outline-variant">
+<input class="bg-transparent border-none text-body-md focus:ring-0 p-1" type="date">
+<span class="text-outline-variant mx-1">-</span>
+<input class="bg-transparent border-none text-body-md focus:ring-0 p-1" type="date">
+</div>
+</div>
+</div>
+<!-- Scrollable Table Area -->
+<div class="overflow-x-auto custom-scrollbar">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low">
+<th class="px-6 py-4 text-label-md font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant">Karta raqami</th>
+<th class="px-6 py-4 text-label-md font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant">Bloklangan sana</th>
+<th class="px-6 py-4 text-label-md font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant">Qoldiq (UZS)</th>
+<th class="px-6 py-4 text-label-md font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant">Foydalanuvchi</th>
+<th class="px-6 py-4 text-label-md font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant">Izoh</th>
+<th class="px-6 py-4 text-label-md font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant text-right">Amallar</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-6 bg-primary rounded flex items-center justify-center overflow-hidden">
+<div class="bg-yellow-400 w-2 h-2 rounded-full"></div>
+</div>
+<div>
+<p class="font-code-sm text-code-sm text-primary font-bold">8600 **** **** 4912</p>
+<p class="text-[11px] text-on-surface-variant">Humo • Jismoniy shaxs</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-body-md text-on-surface">24.05.2024</p>
+<p class="text-[12px] text-on-surface-variant">14:22:15</p>
+</td>
+<td class="px-6 py-4">
+<p class="text-body-md font-bold text-on-surface">12,450,000</p>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 bg-surface-container-high rounded-full flex items-center justify-center text-[11px] font-bold text-primary">A.K.</div>
+<span class="text-body-md text-on-surface">Akbar Komilov</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="max-w-[200px]">
+<p class="text-body-md text-on-surface-variant truncate" title="Shubhali P2P tranzaksiyalar oqimi aniqlandi">Shubhali P2P tranzaksiyalar oqimi...</p>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 text-outline-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+<button class="p-2 text-outline-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-6 bg-blue-700 rounded flex items-center justify-center overflow-hidden">
+<div class="bg-white w-2 h-2 rounded-full"></div>
+</div>
+<div>
+<p class="font-code-sm text-code-sm text-primary font-bold">5614 **** **** 8821</p>
+<p class="text-[11px] text-on-surface-variant">UzCard • Korporativ</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-body-md text-on-surface">23.05.2024</p>
+<p class="text-[12px] text-on-surface-variant">09:10:04</p>
+</td>
+<td class="px-6 py-4">
+<p class="text-body-md font-bold text-on-surface">2,100,000</p>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 bg-surface-container-high rounded-full flex items-center justify-center text-[11px] font-bold text-primary">D.T.</div>
+<span class="text-body-md text-on-surface">Dilshod Tursunov</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="max-w-[200px]">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-error-container text-on-error-container">
+                                            Kredit firibgarligi
+                                        </span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 text-outline-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+<button class="p-2 text-outline-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-6 bg-slate-800 rounded flex items-center justify-center">
+<span class="text-[8px] text-white">VISA</span>
+</div>
+<div>
+<p class="font-code-sm text-code-sm text-primary font-bold">4263 **** **** 0032</p>
+<p class="text-[11px] text-on-surface-variant">Visa Platinum • Jismoniy</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-body-md text-on-surface">22.05.2024</p>
+<p class="text-[12px] text-on-surface-variant">18:45:30</p>
+</td>
+<td class="px-6 py-4">
+<p class="text-body-md font-bold text-on-surface">58,000,200</p>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 bg-surface-container-high rounded-full flex items-center justify-center text-[11px] font-bold text-primary">M.A.</div>
+<span class="text-body-md text-on-surface">Malika Abduva...</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="max-w-[200px]">
+<p class="text-body-md text-on-surface-variant truncate">Huquqni muhofaza qilish organlari so'rovi</p>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 text-outline-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+<button class="p-2 text-outline-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-6 bg-primary rounded flex items-center justify-center overflow-hidden">
+<div class="bg-yellow-400 w-2 h-2 rounded-full"></div>
+</div>
+<div>
+<p class="font-code-sm text-code-sm text-primary font-bold">8600 **** **** 1199</p>
+<p class="text-[11px] text-on-surface-variant">Humo • Jismoniy shaxs</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-body-md text-on-surface">22.05.2024</p>
+<p class="text-[12px] text-on-surface-variant">10:05:01</p>
+</td>
+<td class="px-6 py-4">
+<p class="text-body-md font-bold text-on-surface">0</p>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 bg-surface-container-high rounded-full flex items-center justify-center text-[11px] font-bold text-primary">S.H.</div>
+<span class="text-body-md text-on-surface">Sardor Hakimov</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="max-w-[200px]">
+<p class="text-body-md text-on-surface-variant truncate">E'tirozli hisob-kitoblar</p>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 text-outline-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+<button class="p-2 text-outline-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Pagination -->
+<div class="p-4 border-t border-outline-variant flex justify-between items-center bg-surface-container-lowest">
+<p class="text-body-md text-on-surface-variant">Ko'rsatilmoqda: <span class="font-bold text-on-surface">1-4</span> tadan <span class="font-bold text-on-surface">1,284</span> gacha</p>
+<div class="flex items-center gap-1">
+<button class="p-2 rounded-lg hover:bg-surface-container-low text-on-surface-variant opacity-50 cursor-not-allowed">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-primary text-white font-label-md text-label-md">1</button>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container-low text-on-surface-variant font-label-md text-label-md">2</button>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container-low text-on-surface-variant font-label-md text-label-md">3</button>
+<span class="px-2 text-outline-variant">...</span>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container-low text-on-surface-variant font-label-md text-label-md">321</button>
+<button class="p-2 rounded-lg hover:bg-surface-container-low text-on-surface-variant">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Visual Decoration / Information Banner -->
+
+</div>
+<!-- Footer -->
+<footer class="mt-auto py-6 px-gutter border-t border-outline-variant text-center bg-surface-container-lowest">
+
+</footer>
+</main>
+<!-- Micro-interaction script -->
+<script>
+        document.querySelectorAll('button, a').forEach(elem => {
+            elem.addEventListener('mousedown', () => {
+                elem.classList.add('scale-95');
+            });
+            elem.addEventListener('mouseup', () => {
+                elem.classList.remove('scale-95');
+            });
+            elem.addEventListener('mouseleave', () => {
+                elem.classList.remove('scale-95');
+            });
+        });
+    </script>
+</body></html>

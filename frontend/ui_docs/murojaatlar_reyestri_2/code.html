@@ -1,0 +1,442 @@
+<!DOCTYPE html><html lang="uz"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Murojaatlar Reyestri - Bank Boshqaruvi</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "secondary-container": "#dde0e2",
+                "on-tertiary-fixed": "#002113",
+                "on-error": "#ffffff",
+                "on-secondary-fixed-variant": "#434749",
+                "surface-container-low": "#eef4ff",
+                "on-primary-fixed": "#001b3c",
+                "on-secondary": "#ffffff",
+                "surface-container-lowest": "#ffffff",
+                "on-primary": "#ffffff",
+                "tertiary-container": "#003c27",
+                "background": "#f8f9ff",
+                "inverse-on-surface": "#eaf1ff",
+                "primary": "#001e40",
+                "on-primary-container": "#799dd6",
+                "on-primary-fixed-variant": "#1f477b",
+                "inverse-surface": "#27313e",
+                "primary-container": "#003366",
+                "surface-variant": "#d9e3f4",
+                "on-error-container": "#93000a",
+                "outline": "#737780",
+                "primary-fixed": "#d5e3ff",
+                "on-secondary-container": "#5f6365",
+                "surface-container-high": "#dfe9fa",
+                "outline-variant": "#c3c6d1",
+                "error": "#ba1a1a",
+                "primary-fixed-dim": "#a7c8ff",
+                "surface": "#f8f9ff",
+                "on-tertiary-container": "#00b27b",
+                "surface-container": "#e5eeff",
+                "surface-bright": "#f8f9ff",
+                "surface-dim": "#d1dbec",
+                "on-tertiary-fixed-variant": "#005236",
+                "surface-container-highest": "#d9e3f4",
+                "on-surface": "#121c28",
+                "on-surface-variant": "#43474f",
+                "secondary": "#5b5f61",
+                "tertiary-fixed": "#6ffbbe",
+                "secondary-fixed-dim": "#c4c7c9",
+                "tertiary": "#002416",
+                "inverse-primary": "#a7c8ff",
+                "tertiary-fixed-dim": "#4edea3",
+                "on-background": "#121c28",
+                "surface-tint": "#3a5f94",
+                "on-secondary-fixed": "#181c1e",
+                "error-container": "#ffdad6",
+                "on-tertiary": "#ffffff",
+                "secondary-fixed": "#e0e3e5"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+            },
+            "spacing": {
+                "stack-lg": "2rem",
+                "container-padding": "2rem",
+                "sidebar-width": "280px",
+                "stack-sm": "0.5rem",
+                "gutter": "1.5rem",
+                "stack-md": "1rem"
+            },
+            "fontFamily": {
+                "headline-sm": ["Inter"],
+                "body-md": ["Inter"],
+                "display-md": ["Inter"],
+                "display-lg": ["Inter"],
+                "label-md": ["Inter"],
+                "code-sm": ["Inter"],
+                "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                "display-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "label-md": ["13px", {"lineHeight": "18px", "fontWeight": "600"}],
+                "code-sm": ["13px", {"lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #c3c6d1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a7c8ff; }
+        
+        .table-container {
+            scrollbar-gutter: stable;
+        }
+        
+        /* Glassmorphism subtle overlay */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex overflow-hidden">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-screen w-sidebar-width bg-primary dark:bg-primary-container border-r border-outline-variant dark:border-outline flex flex-col h-full py-6 z-50">
+<div class="px-6 mb-8">
+<h1 class="font-display-md text-display-md font-bold text-white">Banking Admin</h1>
+<p class="text-on-primary-fixed-variant font-body-md text-body-md opacity-70">Boshquv tizimi</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="text-on-primary-fixed-variant hover:bg-primary-container hover:text-white px-6 py-3 flex items-center gap-3 transition-colors active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">Boshqaruv paneli</span>
+</a>
+<a class="bg-secondary-container text-on-secondary-container border-l-4 border-tertiary-fixed-dim px-6 py-3 flex items-center gap-3 active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-body-md text-body-md">Murojaatlar</span>
+</a>
+<a class="text-on-primary-fixed-variant hover:bg-primary-container hover:text-white px-6 py-3 flex items-center gap-3 transition-colors active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined">credit_card_off</span>
+<span class="font-body-md text-body-md">Drop kartalar</span>
+</a>
+<a class="text-on-primary-fixed-variant hover:bg-primary-container hover:text-white px-6 py-3 flex items-center gap-3 transition-colors active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+<span class="font-body-md text-body-md">Admin paneli</span>
+</a>
+</nav>
+<div class="border-t border-primary-container pt-4">
+<a class="text-on-primary-fixed-variant hover:bg-primary-container hover:text-white px-6 py-3 flex items-center gap-3 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md text-body-md">Sozlamalar</span>
+</a>
+<a class="text-on-primary-fixed-variant hover:bg-primary-container hover:text-white px-6 py-3 flex items-center gap-3 transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-body-md text-body-md">Chiqish</span>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 ml-sidebar-width h-screen overflow-y-auto">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center h-16 px-gutter bg-surface/80 backdrop-blur-md sticky top-0 border-b border-outline-variant z-40">
+<div class="flex items-center gap-4">
+<h2 class="font-headline-sm text-headline-sm font-semibold text-primary">Murojaatlar reyestri</h2>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-3">
+<div class="text-right hidden sm:block">
+<p class="font-label-md text-on-surface">Admin Ismi</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-wider">Super Administrator</p>
+</div>
+<img alt="Administrator profili" class="w-10 h-10 rounded-full border border-outline-variant bg-surface-container" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYraNepgONonzKLHY7pU51Z4x9XEgOEyF_PltOmVHiBc_6Uo9l8Wia3vJHvDIxLTKbOyOiYhjt7JbxNbZeIsrUhKAxT4kIOJOGfx0NKjLQ_MO1v8n1kIUlWauvQZoi5uPlmjq3goSKCDBrw6G90hxRtHI7LGFovc5LYz-MVNDxQI-iBtKKYPFg3_chlhqL5gwI0IuumcSY1xZbfDiRW-es3kb3n8hByBwB8pVua-4qs8VmBVts2t7AgsE-TJ9-WcmOOYXt8ee4RS4">
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="p-container-padding space-y-gutter">
+<!-- Filters & Actions -->
+<div class="glass-panel p-6 rounded-xl border border-outline-variant shadow-sm flex flex-wrap items-end gap-4">
+<div class="flex-1 min-w-[200px] space-y-1.5">
+<label class="font-label-md text-on-surface-variant">Sana oralig'i</label>
+<div class="flex items-center bg-white border border-outline-variant rounded-lg px-3 py-2">
+<span class="material-symbols-outlined text-outline text-sm mr-2">calendar_today</span>
+<input class="border-none p-0 text-body-md focus:ring-0 w-full" type="date">
+<span class="mx-2 text-outline">—</span>
+<input class="border-none p-0 text-body-md focus:ring-0 w-full" type="date">
+</div>
+</div>
+<div class="w-48 space-y-1.5">
+<label class="font-label-md text-on-surface-variant">Yo'nalish</label>
+<select class="w-full bg-white border border-outline-variant rounded-lg px-3 py-2 text-body-md focus:ring-primary focus:border-primary">
+<option>Barchasi</option>
+<option>Kredit</option>
+<option>Omonat</option>
+<option>Karta operatsiyalari</option>
+</select>
+</div>
+<div class="w-48 space-y-1.5">
+<label class="font-label-md text-on-surface-variant">Tizim</label>
+<select class="w-full bg-white border border-outline-variant rounded-lg px-3 py-2 text-body-md focus:ring-primary focus:border-primary">
+<option>Barchasi</option>
+<option>Mobile App</option>
+<option>Web Banking</option>
+<option>ATM</option>
+</select>
+</div>
+<button class="bg-primary text-white font-label-md px-6 py-2.5 rounded-lg flex items-center gap-2 hover:bg-primary-container transition-all">
+<span class="material-symbols-outlined">filter_list</span>
+                    Filtrlash
+                </button>
+<button class="bg-tertiary-fixed-dim text-on-tertiary-fixed font-label-md px-6 py-2.5 rounded-lg flex items-center gap-2 hover:opacity-90 transition-all active:scale-95">
+<span class="material-symbols-outlined">add</span>
+                    + Yangi murojaat
+                </button><button class="bg-surface border border-outline-variant text-primary font-label-md px-4 py-2.5 rounded-lg flex items-center gap-2 hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined">download</span>
+                    Excelga eksport
+                </button>
+</div>
+<!-- Main Data Table Section -->
+<div class="bg-white rounded-xl border border-outline-variant shadow-sm overflow-hidden flex flex-col">
+<div class="overflow-x-auto table-container">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="px-4 py-4 font-label-md text-on-surface-variant uppercase tracking-wider whitespace-nowrap">Murojaatchi</th>
+<th class="px-4 py-4 font-label-md text-on-surface-variant uppercase tracking-wider whitespace-nowrap">Manzil</th>
+<th class="px-4 py-4 font-label-md text-on-surface-variant uppercase tracking-wider whitespace-nowrap">Telefon</th>
+<th class="px-4 py-4 font-label-md text-on-surface-variant uppercase tracking-wider whitespace-nowrap">Tashkilot</th>
+<th class="px-4 py-4 font-label-md text-on-surface-variant uppercase tracking-wider whitespace-nowrap">Tizim</th>
+<th class="px-4 py-4 font-label-md text-on-surface-variant uppercase tracking-wider whitespace-nowrap">Predmet</th>
+<th class="px-4 py-4 font-label-md text-on-surface-variant uppercase tracking-wider whitespace-nowrap">Yo'nalish</th>
+<th class="px-4 py-4 font-label-md text-on-surface-variant uppercase tracking-wider whitespace-nowrap">Mijoz kodi</th>
+<th class="px-4 py-4 font-label-md text-on-surface-variant uppercase tracking-wider whitespace-nowrap">Karta</th>
+<th class="px-4 py-4 font-label-md text-on-surface-variant uppercase tracking-wider whitespace-nowrap">Sana</th>
+<th class="px-4 py-4 font-label-md text-on-surface-variant uppercase tracking-wider whitespace-nowrap">Zarar summasi</th>
+<th class="px-4 py-4 font-label-md text-on-surface-variant uppercase tracking-wider whitespace-nowrap">Izoh</th>
+<th class="px-4 py-4 font-label-md text-on-surface-variant uppercase tracking-wider whitespace-nowrap">Amallar</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group" style="opacity: 1; transform: translateY(0px); transition: 0.4s;">
+<td class="px-4 py-4 whitespace-nowrap">
+<div class="font-label-md text-primary">Abdullayev Anvar</div>
+<div class="text-[11px] text-on-surface-variant">Jismoniy shaxs</div>
+</td>
+<td class="px-4 py-4 text-body-md text-on-surface-variant max-w-[150px] truncate">Toshkent sh., Yunusobod 14-4</td>
+<td class="px-4 py-4 text-body-md font-mono">+998 90 123 45 67</td>
+<td class="px-4 py-4 text-body-md text-on-surface-variant">ATB "Hamkorbank"</td>
+<td class="px-4 py-4">
+<span class="px-2 py-1 rounded-full bg-surface-variant text-[11px] font-bold text-primary">MOBILE</span>
+</td>
+<td class="px-4 py-4 text-body-md text-on-surface-variant">To'lov xatoligi</td>
+<td class="px-4 py-4 text-body-md font-medium text-on-primary-fixed-variant">Transaksiyalar</td>
+<td class="px-4 py-4 text-code-sm font-mono">CLI-90821</td>
+<td class="px-4 py-4 text-code-sm font-mono tracking-tighter">8600 **** **** 4421</td>
+<td class="px-4 py-4 text-body-md text-on-surface-variant">24.05.2024</td>
+<td class="px-4 py-4 text-body-md font-bold text-error">1,250,000 UZS</td>
+<td class="px-4 py-4 text-body-md text-on-surface-variant italic truncate max-w-[120px]">Pul yechildi, lekin tushmadi...</td>
+<td class="px-4 py-4">
+<button class="text-primary hover:text-tertiary-fixed-variant transition-colors">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group bg-surface-container-lowest/30" style="opacity: 1; transform: translateY(0px); transition: 0.4s;">
+<td class="px-4 py-4 whitespace-nowrap">
+<div class="font-label-md text-primary">Sattorova Madina</div>
+<div class="text-[11px] text-on-surface-variant">Jismoniy shaxs</div>
+</td>
+<td class="px-4 py-4 text-body-md text-on-surface-variant max-w-[150px] truncate">Samarqand sh., Registon k. 12</td>
+<td class="px-4 py-4 text-body-md font-mono">+998 93 456 78 90</td>
+<td class="px-4 py-4 text-body-md text-on-surface-variant">MB Bosh ofisi</td>
+<td class="px-4 py-4">
+<span class="px-2 py-1 rounded-full bg-tertiary-fixed text-[11px] font-bold text-on-tertiary-fixed">WEB</span>
+</td>
+<td class="px-4 py-4 text-body-md text-on-surface-variant">Kredit so'rovi</td>
+<td class="px-4 py-4 text-body-md font-medium text-on-primary-fixed-variant">Kreditlash</td>
+<td class="px-4 py-4 text-code-sm font-mono">CLI-45123</td>
+<td class="px-4 py-4 text-code-sm font-mono tracking-tighter">9860 **** **** 1009</td>
+<td class="px-4 py-4 text-body-md text-on-surface-variant">23.05.2024</td>
+<td class="px-4 py-4 text-body-md font-bold text-on-surface-variant">0 UZS</td>
+<td class="px-4 py-4 text-body-md text-on-surface-variant italic truncate max-w-[120px]">Kredit liniyasi ochilmadi</td>
+<td class="px-4 py-4">
+<button class="text-primary hover:text-tertiary-fixed-variant transition-colors">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group" style="opacity: 1; transform: translateY(0px); transition: 0.4s;">
+<td class="px-4 py-4 whitespace-nowrap">
+<div class="font-label-md text-primary">"Global Logistics" MCHJ</div>
+<div class="text-[11px] text-on-surface-variant">Yuridik shaxs</div>
+</td>
+<td class="px-4 py-4 text-body-md text-on-surface-variant max-w-[150px] truncate">Buxoro sh., S.Ayniy 45</td>
+<td class="px-4 py-4 text-body-md font-mono">+998 99 999 00 11</td>
+<td class="px-4 py-4 text-body-md text-on-surface-variant">Xalq Banki</td>
+<td class="px-4 py-4">
+<span class="px-2 py-1 rounded-full bg-primary-fixed text-[11px] font-bold text-primary">ATM</span>
+</td>
+<td class="px-4 py-4 text-body-md text-on-surface-variant">Naqdlashtirish</td>
+<td class="px-4 py-4 text-body-md font-medium text-on-primary-fixed-variant">Inkasatsiya</td>
+<td class="px-4 py-4 text-code-sm font-mono">CORP-001</td>
+<td class="px-4 py-4 text-code-sm font-mono tracking-tighter">5614 **** **** 8877</td>
+<td class="px-4 py-4 text-body-md text-on-surface-variant">22.05.2024</td>
+<td class="px-4 py-4 text-body-md font-bold text-error">4,000,000 UZS</td>
+<td class="px-4 py-4 text-body-md text-on-surface-variant italic truncate max-w-[120px]">ATM pulni bermadi, balansdan ayirildi</td>
+<td class="px-4 py-4">
+<button class="text-primary hover:text-tertiary-fixed-variant transition-colors">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-6 py-4 bg-surface border-t border-outline-variant flex items-center justify-between">
+<p class="text-label-md text-on-surface-variant">Jami: 1,420 murojaat</p>
+<div class="flex items-center gap-1">
+<button class="p-2 rounded hover:bg-surface-container-high transition-colors text-outline">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded bg-primary text-white text-label-md">1</button>
+<button class="w-8 h-8 rounded hover:bg-surface-container-high text-on-surface text-label-md">2</button>
+<button class="w-8 h-8 rounded hover:bg-surface-container-high text-on-surface text-label-md">3</button>
+<span class="px-2 text-outline">...</span>
+<button class="w-8 h-8 rounded hover:bg-surface-container-high text-on-surface text-label-md">48</button>
+<button class="p-2 rounded hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-label-md text-on-surface-variant">Sahifada:</span>
+<select class="bg-transparent border-none text-label-md text-primary focus:ring-0">
+<option>10</option>
+<option>25</option>
+<option>50</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Bento Stats Summary -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter">
+<div class="bg-white p-6 rounded-xl border border-outline-variant flex flex-col justify-between h-32 relative overflow-hidden group">
+<div class="relative z-10">
+<p class="text-label-md text-on-surface-variant">Yangi murojaatlar</p>
+<p class="text-display-md text-primary font-bold">128</p>
+</div>
+<div class="flex items-center gap-1 text-on-tertiary-fixed-variant text-[11px] font-bold relative z-10">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+                        +12% bugun
+                    </div>
+<span class="material-symbols-outlined absolute -bottom-4 -right-4 text-8xl text-surface-container opacity-20 group-hover:scale-110 transition-transform">pending_actions</span>
+</div>
+<div class="bg-white p-6 rounded-xl border border-outline-variant flex flex-col justify-between h-32 relative overflow-hidden group">
+<div class="relative z-10">
+<p class="text-label-md text-on-surface-variant">Jarayondagilar</p>
+<p class="text-display-md text-on-primary-fixed-variant font-bold">452</p>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant text-[11px] font-bold relative z-10">
+<span class="material-symbols-outlined text-sm">update</span>
+                        O'rtacha 2.5 soat
+                    </div>
+<span class="material-symbols-outlined absolute -bottom-4 -right-4 text-8xl text-surface-container opacity-20 group-hover:scale-110 transition-transform">running_with_errors</span>
+</div>
+<div class="bg-white p-6 rounded-xl border border-outline-variant flex flex-col justify-between h-32 relative overflow-hidden group">
+<div class="relative z-10">
+<p class="text-label-md text-on-surface-variant">Yopilgan</p>
+<p class="text-display-md text-on-tertiary-fixed-variant font-bold">840</p>
+</div>
+<div class="flex items-center gap-1 text-on-tertiary-fixed-variant text-[11px] font-bold relative z-10">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+                        94% muvaffaqiyat
+                    </div>
+<span class="material-symbols-outlined absolute -bottom-4 -right-4 text-8xl text-surface-container opacity-20 group-hover:scale-110 transition-transform">task_alt</span>
+</div>
+<div class="bg-white p-6 rounded-xl border border-outline-variant flex flex-col justify-between h-32 relative overflow-hidden group">
+<div class="relative z-10">
+<p class="text-label-md text-on-surface-variant">Umumiy zarar summasi</p>
+<p class="text-display-md text-error font-bold">8.4M</p>
+</div>
+<div class="flex items-center gap-1 text-error text-[11px] font-bold relative z-10">
+<span class="material-symbols-outlined text-sm">warning</span>
+                        Zudlik bilan choralar
+                    </div>
+<span class="material-symbols-outlined absolute -bottom-4 -right-4 text-8xl text-error-container opacity-20 group-hover:scale-110 transition-transform">payments</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Success Modal Overlay -->
+<div class="fixed inset-0 bg-primary/40 backdrop-blur-sm z-[100] hidden flex items-center justify-center" id="modal-backdrop">
+<div class="bg-white w-full max-w-md rounded-2xl shadow-2xl p-8 transform transition-all scale-95 opacity-0" id="modal-content">
+<div class="w-16 h-16 bg-tertiary-fixed rounded-full flex items-center justify-center mx-auto mb-6 text-on-tertiary-fixed">
+<span class="material-symbols-outlined text-4xl">check_circle</span>
+</div>
+<h3 class="text-headline-sm text-center mb-2">Muvaffaqiyatli!</h3>
+<p class="text-body-md text-on-surface-variant text-center mb-8">Yangi murojaat tizimga kiritildi va mas'ul xodimga yo'naltirildi.</p>
+<button class="w-full bg-primary text-white py-3 rounded-xl font-label-md hover:bg-primary-container transition-all" onclick="toggleModal()">
+                Tushunarli
+            </button>
+</div>
+</div>
+<script>
+        function toggleModal() {
+            const backdrop = document.getElementById('modal-backdrop');
+            const content = document.getElementById('modal-content');
+            
+            if (backdrop.classList.contains('hidden')) {
+                backdrop.classList.remove('hidden');
+                backdrop.classList.add('flex');
+                setTimeout(() => {
+                    content.classList.remove('scale-95', 'opacity-0');
+                    content.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            } else {
+                content.classList.remove('scale-100', 'opacity-100');
+                content.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    backdrop.classList.add('hidden');
+                    backdrop.classList.remove('flex');
+                }, 200);
+            }
+        }
+
+        document.querySelector('button.bg-tertiary-fixed-dim').addEventListener('click', toggleModal);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const rows = document.querySelectorAll('tbody tr');
+            rows.forEach((row, index) => {
+                row.style.opacity = '0';
+                row.style.transform = 'translateY(10px)';
+                setTimeout(() => {
+                    row.style.transition = 'all 0.4s ease';
+                    row.style.opacity = '1';
+                    row.style.transform = 'translateY(0)';
+                }, 100 + (index * 50));
+            });
+        });
+    </script>
+</body></html>

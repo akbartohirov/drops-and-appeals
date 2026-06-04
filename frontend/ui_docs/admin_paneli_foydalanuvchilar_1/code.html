@@ -1,0 +1,417 @@
+<!DOCTYPE html><html class="light" lang="uz"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Bank Boshqaruvi - Foydalanuvchilar</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9ff; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #d1dbec; border-radius: 10px; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                "secondary-container": "#dde0e2",
+                "on-tertiary-fixed": "#002113",
+                "on-error": "#ffffff",
+                "on-secondary-fixed-variant": "#434749",
+                "surface-container-low": "#eef4ff",
+                "on-primary-fixed": "#001b3c",
+                "on-secondary": "#ffffff",
+                "surface-container-lowest": "#ffffff",
+                "on-primary": "#ffffff",
+                "tertiary-container": "#003c27",
+                "background": "#f8f9ff",
+                "inverse-on-surface": "#eaf1ff",
+                "primary": "#001e40",
+                "on-primary-container": "#799dd6",
+                "on-primary-fixed-variant": "#1f477b",
+                "inverse-surface": "#27313e",
+                "primary-container": "#003366",
+                "surface-variant": "#d9e3f4",
+                "on-error-container": "#93000a",
+                "outline": "#737780",
+                "primary-fixed": "#d5e3ff",
+                "on-secondary-container": "#5f6365",
+                "surface-container-high": "#dfe9fa",
+                "outline-variant": "#c3c6d1",
+                "error": "#ba1a1a",
+                "primary-fixed-dim": "#a7c8ff",
+                "surface": "#f8f9ff",
+                "on-tertiary-container": "#00b27b",
+                "surface-container": "#e5eeff",
+                "surface-bright": "#f8f9ff",
+                "surface-dim": "#d1dbec",
+                "on-tertiary-fixed-variant": "#005236",
+                "surface-container-highest": "#d9e3f4",
+                "on-surface": "#121c28",
+                "on-surface-variant": "#43474f",
+                "secondary": "#5b5f61",
+                "tertiary-fixed": "#6ffbbe",
+                "secondary-fixed-dim": "#c4c7c9",
+                "tertiary": "#002416",
+                "inverse-primary": "#a7c8ff",
+                "tertiary-fixed-dim": "#4edea3",
+                "on-background": "#121c28",
+                "surface-tint": "#3a5f94",
+                "on-secondary-fixed": "#181c1e",
+                "error-container": "#ffdad6",
+                "on-tertiary": "#ffffff",
+                "secondary-fixed": "#e0e3e5"
+              },
+              "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+              },
+              "spacing": {
+                "stack-lg": "2rem",
+                "container-padding": "2rem",
+                "sidebar-width": "280px",
+                "stack-sm": "0.5rem",
+                "gutter": "1.5rem",
+                "stack-md": "1rem"
+              },
+              "fontFamily": {
+                "headline-sm": ["Inter"],
+                "body-md": ["Inter"],
+                "display-md": ["Inter"],
+                "display-lg": ["Inter"],
+                "label-md": ["Inter"],
+                "code-sm": ["Inter"],
+                "body-lg": ["Inter"]
+              },
+              "fontSize": {
+                "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                "display-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "label-md": ["13px", {"lineHeight": "18px", "fontWeight": "600"}],
+                "code-sm": ["13px", {"lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+              }
+            }
+          }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-screen w-sidebar-width bg-primary-container text-on-primary border-r border-outline-variant flex flex-col h-full py-6 z-50">
+<div class="px-6 mb-10 flex flex-col gap-1">
+<span class="font-display-md text-display-md font-bold text-white tracking-tight">Banking Admin</span>
+<span class="font-body-md text-body-md text-primary-fixed-dim opacity-80">Boshqaruv tizimi</span>
+</div>
+<nav class="flex-1 px-3 space-y-1">
+<a class="text-on-primary-fixed-variant hover:bg-primary-container hover:text-white px-4 py-3 flex items-center gap-3 transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined text-xl">dashboard</span>
+<span class="font-body-md text-body-md">Boshqaruv paneli</span>
+</a>
+<a class="text-on-primary-fixed-variant hover:bg-primary-container hover:text-white px-4 py-3 flex items-center gap-3 transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined text-xl">description</span>
+<span class="font-body-md text-body-md">Murojaatlar</span>
+</a>
+<a class="text-on-primary-fixed-variant hover:bg-primary-container hover:text-white px-4 py-3 flex items-center gap-3 transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined text-xl">credit_card_off</span>
+<span class="font-body-md text-body-md">Drop kartalar</span>
+</a>
+<a class="bg-secondary-container text-on-secondary-container border-l-4 border-tertiary-fixed-dim px-4 py-3 flex items-center gap-3 rounded-r-lg" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">admin_panel_settings</span>
+<span class="font-body-md text-body-md">Admin paneli</span>
+</a>
+</nav>
+<div class="mt-auto px-3 border-t border-white/10 pt-4">
+<a class="text-on-primary-fixed-variant hover:bg-primary-container hover:text-white px-4 py-3 flex items-center gap-3 transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined text-xl">settings</span>
+<span class="font-body-md text-body-md">Sozlamalar</span>
+</a>
+<button class="w-full text-on-primary-fixed-variant hover:bg-red-900/20 hover:text-red-300 px-4 py-3 flex items-center gap-3 transition-colors rounded-lg active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-xl">logout</span>
+<span class="font-body-md text-body-md">Chiqish</span>
+</button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-sidebar-width min-h-screen flex flex-col">
+<!-- Top Navigation Bar -->
+<header class="flex justify-between items-center h-16 px-gutter border-b border-outline-variant bg-surface/80 backdrop-blur-md sticky top-0 z-40">
+<div class="flex items-center gap-4">
+<h1 class="font-headline-sm text-headline-sm font-semibold text-primary">Bank Boshqaruvi</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-3 pl-2">
+<div class="text-right">
+<p class="font-label-md text-label-md text-on-surface">Aziz Rahmonov</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-widest">Bosh Administrator</p>
+</div>
+<img alt="Administrator profili" class="w-10 h-10 rounded-full border-2 border-primary-container object-cover" data-alt="A professional close-up portrait of a middle-aged male bank administrator wearing a crisp white shirt and a dark navy blue tie. He has a friendly but authoritative expression, set against a blurred modern office background with soft neutral tones. The lighting is bright and professional, following a high-end corporate photography style with natural color balance and sharp focus on the face." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2SrMkztq5gfFioLqJMxegekn7TWZ7aIHCCt_gG5nTgUEdF0Zuw-UIFbJaqOEX5jtQHVBW360EZ0vL60SpbniqAsbLYOWdZwBjPEWIrTTOXw-Fti0ltNAMkSeD6WCzK8i0YsQG_tD9JaICqRZylE8O2uDy3m_QLD4F-YIxtV9zlJOUh04l9c-i51DNaig02_QHkbQ8_1qfJyty48mq1d8eJvZTN5yQkmT8xUeMHMlyrm9UcxGz0nlw8sKKgX7Vg__wIWVxU-_SVHg">
+</div>
+</div>
+</header>
+<!-- Page Canvas -->
+<section class="p-container-padding flex flex-col gap-gutter overflow-y-auto max-h-[calc(100vh-64px)] custom-scrollbar">
+<!-- Bento Dashboard Summary (Admin Context) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter">
+<div class="bg-surface border border-outline-variant p-stack-md rounded-xl flex flex-col justify-between hover:shadow-sm transition-shadow">
+<div>
+<span class="text-on-surface-variant font-label-md text-label-md block mb-2">Jami foydalanuvchilar</span>
+<div class="flex items-baseline gap-2">
+<h2 class="font-display-md text-display-md text-on-surface">1,284</h2>
+<span class="text-on-tertiary-container text-xs font-bold">+12%</span>
+</div>
+</div>
+<div class="mt-4 h-1 bg-surface-container rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[70%]"></div>
+</div>
+</div>
+<div class="bg-surface border border-outline-variant p-stack-md rounded-xl flex flex-col justify-between hover:shadow-sm transition-shadow">
+<div>
+<span class="text-on-surface-variant font-label-md text-label-md block mb-2">Faol adminlar</span>
+<div class="flex items-baseline gap-2">
+<h2 class="font-display-md text-display-md text-on-surface">42</h2>
+<span class="text-on-surface-variant text-xs">Joriy oydagi faollik</span>
+</div>
+</div>
+<div class="mt-4 flex -space-x-2">
+<img class="w-6 h-6 rounded-full border border-surface" data-alt="Close-up of a diverse professional person's face in a corporate setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuADqAs5jRuXnWTE6UPW0R7hUcFhkahsD2fE1GiB9FAfR8rJXCq81Pv1bosyRj6cGRzn469sE1Ktnxn7eoOrne2LSaD782vKH8ev2gf5MK2TVQH459sdlUEQV4jBvuc5uv2B90p7bah3JD8t1LbOg5-HTx3DD5wOKRY0L1tHiM_L5ogeanP6pZ9A0Vfx1Y7XEa8-iy7S751nwPPD2r-FhykynMOXA3rFphhkhuj_hJLELr9IGDDnSAT_-dp6-WK3P4aX_OrIyc6pHqs">
+<img class="w-6 h-6 rounded-full border border-surface" data-alt="Close-up of a professional woman smiling in a bright office." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWUpKvL9J8yw7ada0u1hrcTIaTH6yFmgVIyHGoLFbFyeBJgjpJfX9G1IIbnwihxXIAh1EfrcfGsCjZ7gHh3MDpmBxoeOosylgqprZ8a6gGp5JQRWGHlqejcaVgWt5-Gi8t4TOW4YHHFQcVh3I0AMzTKj_7CliTm35tBaO7htN0vCgZ2SPm_X8TmB_BRTESP1v96W-Ix4N8CxHtBdiv0KFHX5xbTbtT_IkA5j9tPRYhDrnN941BFJM5edD9Bd5JvBk-LFJM-zrq6F8">
+<img class="w-6 h-6 rounded-full border border-surface" data-alt="Professional male portrait with a clean background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdwHAQqv1Nmb5E20_rXsFZXQM_bwI6CBm3fZWuWpdnW0svzHVe1qdetngggr_gz0jjeK2HKPBGyEV7FscytDtLImXWGbjWRfTZtSDUsBjM5n3BlB0872Td1AvZqjmuD9GwpPlJzn9Q3plr2bRTX8IjHcburrvqYurtDyB5UBy7N_bxdlv0NcrpYHGBsjBFt84wSpm_l6OxR0QxRo1ut8uXQO1E3ObxVU_o2pfrJ2UOwLsTFKlMWGZIFPDi_yoIPlqYxPefm3zCFNU">
+<div class="w-6 h-6 rounded-full bg-primary-container text-[10px] text-white flex items-center justify-center border border-surface">+39</div>
+</div>
+</div>
+<div class="col-span-1 md:col-span-2 bg-surface border border-outline-variant p-stack-md rounded-xl relative overflow-hidden group">
+<div class="relative z-10 flex h-full items-center justify-between">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Yangi hisobot tayyor</h3>
+<p class="text-on-surface-variant font-body-md text-body-md">Oylik foydalanuvchi faolligi va xavfsizlik auditi.</p>
+</div>
+<span class="material-symbols-outlined text-primary/10 text-8xl transition-transform group-hover:scale-110">analytics</span>
+</div>
+</div>
+</div>
+<!-- Table Section -->
+<div class="bg-surface border border-outline-variant rounded-xl overflow-hidden flex flex-col shadow-sm">
+<!-- Table Controls -->
+<div class="px-gutter py-4 border-b border-outline-variant flex flex-wrap justify-between items-center gap-4">
+<div class="flex items-center gap-3">
+<h2 class="font-headline-sm text-headline-sm text-primary">Foydalanuvchilar ro'yxati</h2>
+<span class="bg-surface-container-highest text-on-surface px-2.5 py-0.5 rounded-full text-xs font-bold">84 ta natija</span>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 border border-outline-variant px-4 py-2 rounded-lg font-label-md text-label-md text-on-surface hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+                            Saralash
+                        </button>
+<button class="flex items-center gap-2 bg-primary text-on-primary px-5 py-2 rounded-lg font-label-md text-label-md hover:bg-primary-container transition-all shadow-sm active:scale-95" onclick="toggleModal('addUserModal')">
+<span class="material-symbols-outlined text-sm">person_add</span>
+                            Yangi qo'shish
+                        </button>
+</div>
+</div>
+<!-- Actual Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">ID</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Username</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Roli</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Yaratilgan sana</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Holati</th>
+<th class="px-6 py-4 text-right font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Amallar</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/30">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-6 py-4 text-code-sm font-code-sm text-on-surface-variant">#USR-8821</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container/10 flex items-center justify-center text-primary font-bold text-xs">JA</div>
+<div>
+<p class="font-body-md text-body-md text-on-surface font-semibold">jamshid_ali</p>
+<p class="text-[11px] text-on-surface-variant">j.alimov@bank.uz</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full text-[11px] font-bold bg-tertiary-fixed text-on-tertiary-fixed-variant">Admin</span>
+</td>
+<td class="px-6 py-4 font-body-md text-body-md text-on-surface-variant">12 May, 2023</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-on-tertiary-container"></span>
+<span class="text-xs text-on-surface">Faol</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 hover:bg-surface-container rounded-lg text-primary transition-colors" title="Tahrirlash">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-1.5 hover:bg-error-container/20 rounded-lg text-error transition-colors" title="O'chirish">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-6 py-4 text-code-sm font-code-sm text-on-surface-variant">#USR-8794</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-container/30 flex items-center justify-center text-secondary font-bold text-xs">MN</div>
+<div>
+<p class="font-body-md text-body-md text-on-surface font-semibold">madina_nur</p>
+<p class="text-[11px] text-on-surface-variant">m.nuri@bank.uz</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full text-[11px] font-bold bg-secondary-container text-on-secondary-fixed-variant">User</span>
+</td>
+<td class="px-6 py-4 font-body-md text-body-md text-on-surface-variant">15 Iyun, 2023</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-on-tertiary-container"></span>
+<span class="text-xs text-on-surface">Faol</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 hover:bg-surface-container rounded-lg text-primary transition-colors" title="Tahrirlash">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-1.5 hover:bg-error-container/20 rounded-lg text-error transition-colors" title="O'chirish">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-6 py-4 text-code-sm font-code-sm text-on-surface-variant">#USR-8742</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container/10 flex items-center justify-center text-primary font-bold text-xs">ST</div>
+<div>
+<p class="font-body-md text-body-md text-on-surface font-semibold">sardor_t</p>
+<p class="text-[11px] text-on-surface-variant">s.tohirov@bank.uz</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full text-[11px] font-bold bg-secondary-container text-on-secondary-fixed-variant">User</span>
+</td>
+<td class="px-6 py-4 font-body-md text-body-md text-on-surface-variant">22 Iyun, 2023</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-outline-variant"></span>
+<span class="text-xs text-on-surface-variant">Oflayn</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 hover:bg-surface-container rounded-lg text-primary transition-colors" title="Tahrirlash">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-1.5 hover:bg-error-container/20 rounded-lg text-error transition-colors" title="O'chirish">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-gutter py-4 bg-surface-container-lowest border-t border-outline-variant flex justify-between items-center">
+<span class="text-label-md font-label-md text-on-surface-variant">1-10 dan 84 ta</span>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors disabled:opacity-30" disabled="">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-on-primary font-label-md text-label-md">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface hover:bg-surface-container font-label-md text-label-md">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface hover:bg-surface-container font-label-md text-label-md">3</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Modal for Adding New User -->
+<div class="fixed inset-0 z-[100] hidden items-center justify-center bg-primary/40 backdrop-blur-sm transition-opacity" id="addUserModal">
+<div class="bg-surface w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
+<div class="px-6 py-4 bg-primary text-on-primary flex justify-between items-center">
+<h3 class="font-headline-sm text-headline-sm">Yangi foydalanuvchi</h3>
+<button class="text-on-primary hover:bg-white/10 rounded-full p-1 transition-colors" onclick="toggleModal('addUserModal')">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<form class="p-6 space-y-4">
+<div class="space-y-1">
+<label class="font-label-md text-label-md text-on-surface-variant ml-1">Username</label>
+<input class="w-full px-4 py-2.5 rounded-lg border border-outline-variant focus:border-primary-container focus:ring-2 focus:ring-primary/20 outline-none transition-all text-body-md font-body-md" placeholder="Masalan: alisher_99" type="text">
+</div>
+<div class="space-y-1">
+<label class="font-label-md text-label-md text-on-surface-variant ml-1">Email manzili</label>
+<input class="w-full px-4 py-2.5 rounded-lg border border-outline-variant focus:border-primary-container focus:ring-2 focus:ring-primary/20 outline-none transition-all text-body-md font-body-md" placeholder="example@bank.uz" type="email">
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-1">
+<label class="font-label-md text-label-md text-on-surface-variant ml-1">Roli</label>
+<select class="w-full px-4 py-2.5 rounded-lg border border-outline-variant focus:border-primary-container focus:ring-2 focus:ring-primary/20 outline-none transition-all text-body-md font-body-md bg-white">
+<option>User</option>
+<option>Admin</option>
+<option>Audit</option>
+</select>
+</div>
+<div class="space-y-1">
+<label class="font-label-md text-label-md text-on-surface-variant ml-1">Parol</label>
+<input class="w-full px-4 py-2.5 rounded-lg border border-outline-variant focus:border-primary-container focus:ring-2 focus:ring-primary/20 outline-none transition-all text-body-md font-body-md" placeholder="••••••••" type="password">
+</div>
+</div>
+<div class="pt-4 flex gap-3">
+<button class="flex-1 px-4 py-2.5 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container transition-colors" onclick="toggleModal('addUserModal')" type="button">Bekor qilish</button>
+<button class="flex-1 px-4 py-2.5 bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:bg-primary-container transition-all active:scale-95 shadow-md" type="submit">Saqlash</button>
+</div>
+</form>
+</div>
+</div>
+<script>
+        function toggleModal(id) {
+            const modal = document.getElementById(id);
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            } else {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        // Close modal on escape key
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('addUserModal');
+                if (!modal.classList.contains('hidden')) toggleModal('addUserModal');
+            }
+        });
+
+        // Close modal on outside click
+        document.getElementById('addUserModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('addUserModal')) toggleModal('addUserModal');
+        });
+    </script>
+</body></html>
