@@ -53,12 +53,13 @@ exports.getDropCards = async (req, res) => {
       cards = db.prepare(paginatedQuery).all(...params, limitNum, offset);
     }
 
-    // Calculate current month blocked count (overall unfiltered)
+    // Calculate current month blocked count & sum (overall unfiltered)
     const currentMonthStr = new Date().toISOString().slice(0, 7); // "YYYY-MM"
     const currentMonthResult = db.prepare(
-      "SELECT COUNT(*) as count FROM drop_cards WHERE strftime('%Y-%m', blocked_at) = ?"
+      "SELECT COUNT(*) as count, SUM(balance) as totalAmount FROM drop_cards WHERE strftime('%Y-%m', blocked_at) = ?"
     ).get(currentMonthStr);
     const currentMonthBlockedCount = currentMonthResult.count || 0;
+    const currentMonthBlockedAmount = currentMonthResult.totalAmount || 0;
 
     res.json({
       data: cards,
@@ -71,6 +72,7 @@ exports.getDropCards = async (req, res) => {
       stats: {
         totalFilteredCount: totalItems,
         currentMonthBlockedCount,
+        currentMonthBlockedAmount,
         totalFilteredAmount
       }
     });

@@ -24,16 +24,13 @@ const Topbar = () => {
 
   // User details formatting
   const getUserDisplayName = () => {
-    if (user.username === 'admin') return 'Azizov B.';
-    if (user.username === 'operator') return 'Rahmonov A.';
-    if (user.username === 'shaxriyor') return 'Karimov Sh.';
-    if (user.username === 'madina_n') return 'Alisherova M.';
-    // Fallback capitalizing username
-    return user.username.charAt(0).toUpperCase() + user.username.slice(1);
+    return user.username;
   };
 
   const getUserRoleLabel = () => {
-    return user.role === 'Admin' ? 'Bosh administrator' : 'Tizim operatori';
+    const role = (user.role || '').toLowerCase();
+    if (role === 'admin') return 'admin';
+    return 'operator';
   };
 
   // Avatar placeholder background & initials

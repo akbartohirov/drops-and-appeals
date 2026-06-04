@@ -9,9 +9,7 @@ import {
   Plus, 
   CheckCircle, 
   AlertTriangle,
-  Mail,
   User,
-  Shield,
   Lock
 } from 'lucide-react';
 
@@ -23,7 +21,6 @@ const AdminPanel = () => {
   
   // Form States
   const [formUsername, setFormUsername] = useState('');
-  const [formEmail, setFormEmail] = useState('');
   const [formRole, setFormRole] = useState('User');
   const [formPassword, setFormPassword] = useState('');
 
@@ -78,7 +75,6 @@ const AdminPanel = () => {
 
     const newUser = {
       username: formUsername,
-      email: formEmail,
       role: formRole,
       password: formPassword,
       status: 'Faol'
@@ -90,7 +86,6 @@ const AdminPanel = () => {
 
       // Reset fields
       setFormUsername('');
-      setFormEmail('');
       setFormRole('User');
       setFormPassword('');
 
@@ -127,7 +122,7 @@ const AdminPanel = () => {
       </div>
 
       {/* Bento Grid Analytics Row */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-gutter">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
         {/* Card 1 */}
         <div className="bg-surface border border-outline-variant p-6 rounded-xl flex flex-col justify-between hover:shadow-sm transition-shadow h-32 bg-white shadow-sm">
           <div>
@@ -149,15 +144,6 @@ const AdminPanel = () => {
             <UserCheck className="w-3.5 h-3.5" />
             {(activeUsers / totalUsers * 100).toFixed(0)}% faollik ko'rsatkichi
           </p>
-        </div>
-
-        {/* Card 3: Info alert */}
-        <div className="col-span-1 md:col-span-2 bg-surface border border-outline-variant p-6 rounded-xl relative overflow-hidden group h-32 bg-white shadow-sm flex items-center justify-between">
-          <div className="z-10">
-            <h3 className="font-bold text-primary mb-1">Xavfsizlik Auditi</h3>
-            <p className="text-on-surface-variant text-xs max-w-sm">Tizim operatorlari faolligi va xavfsizlik kalitlari muntazam ravishda avtomatik tekshiriladi.</p>
-          </div>
-          <Shield className="w-20 h-20 text-primary-container/10 flex-shrink-0 absolute right-4 bottom-4 group-hover:scale-110 transition-transform duration-300 pointer-events-none" />
         </div>
       </div>
 
@@ -202,10 +188,7 @@ const AdminPanel = () => {
                         <div className="w-8 h-8 rounded-full bg-primary-container/10 flex items-center justify-center text-primary font-bold text-xs select-none">
                           {u.username.substring(0, 2).toUpperCase()}
                         </div>
-                        <div>
-                          <p className="font-semibold text-on-surface font-mono">{u.username}</p>
-                          <p className="text-[11px] text-outline">{u.email}</p>
-                        </div>
+                        <p className="font-semibold text-on-surface font-mono">{u.username}</p>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -275,22 +258,6 @@ const AdminPanel = () => {
             </div>
           </div>
 
-          {/* Email address */}
-          <div className="space-y-1">
-            <label className="block font-label-md text-label-md text-on-surface-variant">Email manzili</label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-outline-variant" />
-              <input
-                type="email"
-                required
-                value={formEmail}
-                onChange={(e) => setFormEmail(e.target.value)}
-                placeholder="example@bank.uz"
-                className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all text-body-md"
-              />
-            </div>
-          </div>
-
           {/* Role and Password */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
@@ -318,14 +285,6 @@ const AdminPanel = () => {
                 />
               </div>
             </div>
-          </div>
-
-          {/* Help notice */}
-          <div className="p-3 bg-primary-fixed/20 border border-primary-fixed rounded-lg text-xs text-primary flex items-start gap-2">
-            <Shield className="w-4 h-4 mt-0.5 flex-shrink-0" />
-            <span>
-              Yangi yaratilgan xodim tizimga kirish uchun username nomi va oxiriga <strong>123</strong> qo'shilgan paroldan foydalanadi (Masalan: {formUsername || 'username'} / {formUsername || 'username'}123).
-            </span>
           </div>
 
           {/* Actions */}

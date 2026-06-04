@@ -12,7 +12,8 @@ import {
   User,
   AlertOctagon,
   TrendingUp,
-  DollarSign,
+  Percent,
+  Wallet,
   FileSpreadsheet,
   ChevronLeft,
   ChevronRight
@@ -31,6 +32,7 @@ const DropCards = () => {
   // Statistics State
   const [totalBlockedAmount, setTotalBlockedAmount] = useState(0);
   const [currentMonthBlockedCount, setCurrentMonthBlockedCount] = useState(0);
+  const [currentMonthBlockedAmount, setCurrentMonthBlockedAmount] = useState(0);
 
   // Search & Filters State
   const [searchTerm, setSearchTerm] = useState('');
@@ -66,6 +68,7 @@ const DropCards = () => {
       setTotalItems(res.pagination.totalItems);
       setTotalPages(res.pagination.totalPages);
       setCurrentMonthBlockedCount(res.stats.currentMonthBlockedCount);
+      setCurrentMonthBlockedAmount(res.stats.currentMonthBlockedAmount || 0);
       setTotalBlockedAmount(res.stats.totalFilteredAmount);
       setLoading(false);
     } catch (err) {
@@ -205,44 +208,65 @@ const DropCards = () => {
       </div>
 
       {/* Stats Row (Bento Grid) */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
         {/* Metric 1 */}
-        <div className="bg-white p-6 rounded-xl border border-outline-variant flex flex-col justify-between h-32 shadow-sm card-hover-effect">
-          <div>
-            <p className="text-on-surface-variant font-label-md text-label-md mb-1">Jami bloklangan</p>
-            <h3 className="text-display-md font-display-md text-primary font-bold">{totalItems} ta</h3>
-          </div>
-          <div className="flex items-center gap-1 text-emerald-600 text-xs font-semibold select-none">
-            <TrendingUp className="w-3.5 h-3.5" />
-            <span>+12% (oxirgi oy)</span>
+        <div className="bg-white p-6 rounded-xl border border-outline-variant shadow-sm card-hover-effect">
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="text-on-surface-variant font-label-md text-label-md mb-1">Jami bloklangan</p>
+              <h3 className="text-display-md font-display-md text-primary font-bold">{totalItems} ta</h3>
+            </div>
+            <div className="p-2 bg-primary/10 rounded-lg text-primary">
+              <CreditCard className="w-5 h-5" />
+            </div>
           </div>
         </div>
 
-        {/* Metric 2: Joriy oyda bloklangan */}
-        <div className="bg-white p-6 rounded-xl border border-outline-variant flex flex-col justify-between h-32 shadow-sm card-hover-effect">
-          <div>
-            <p className="text-on-surface-variant font-label-md text-label-md mb-1">Joriy oyda bloklangan</p>
-            <h3 className="text-display-md font-display-md text-primary font-bold">{currentMonthBlockedCount} ta</h3>
-          </div>
-          <div className="flex items-center gap-1 text-emerald-600 text-xs font-semibold select-none">
-            <Calendar className="w-3.5 h-3.5" />
-            <span>Joriy oy ko'rsatkichi</span>
+        {/* Metric 2 */}
+        <div className="bg-white p-6 rounded-xl border border-outline-variant shadow-sm card-hover-effect">
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="text-on-surface-variant font-label-md text-label-md mb-1">Jami bloklangan qoldiq</p>
+              <h3 className="text-display-md font-display-md text-emerald-600 font-bold">
+                {totalBlockedAmount >= 1000000
+                  ? `${(totalBlockedAmount / 1000000).toFixed(1)}M UZS`
+                  : `${totalBlockedAmount.toLocaleString('uz-UZ')} UZS`}
+              </h3>
+            </div>
+            <div className="p-2 bg-emerald-100 rounded-lg text-emerald-600">
+              <Wallet className="w-5 h-5" />
+            </div>
           </div>
         </div>
 
         {/* Metric 3 */}
-        <div className="bg-white p-6 rounded-xl border border-outline-variant flex flex-col justify-between h-32 shadow-sm card-hover-effect">
-          <div>
-            <p className="text-on-surface-variant font-label-md text-label-md mb-1">Bloklangan mablag'lar</p>
-            <h3 className="text-display-md font-display-md text-primary font-bold">
-              {totalBlockedAmount >= 1000000
-                ? `${(totalBlockedAmount / 1000000).toFixed(1)}M UZS`
-                : `${totalBlockedAmount.toLocaleString('uz-UZ')} UZS`}
-            </h3>
+        <div className="bg-white p-6 rounded-xl border border-outline-variant shadow-sm card-hover-effect">
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="text-on-surface-variant font-label-md text-label-md mb-1">Joriy oyda bloklangan</p>
+              <h3 className="text-display-md font-display-md text-amber-500 font-bold">{currentMonthBlockedCount} ta</h3>
+            </div>
+            <div className="p-2 bg-amber-100 rounded-lg text-amber-600">
+              <Calendar className="w-5 h-5" />
+            </div>
           </div>
-          <p className="text-on-surface-variant text-[11px] font-medium select-none">
-            O'rtacha: {totalItems > 0 ? ((totalBlockedAmount / totalItems) / 1000).toFixed(0) + 'k' : '0'} / karta
-          </p>
+        </div>
+
+        {/* Metric 4 */}
+        <div className="bg-white p-6 rounded-xl border border-outline-variant shadow-sm card-hover-effect">
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="text-on-surface-variant font-label-md text-label-md mb-1">Joriy oy bloklangan qoldiq</p>
+              <h3 className="text-display-md font-display-md text-indigo-600 font-bold">
+                {currentMonthBlockedAmount >= 1000000
+                  ? `${(currentMonthBlockedAmount / 1000000).toFixed(1)}M UZS`
+                  : `${currentMonthBlockedAmount.toLocaleString('uz-UZ')} UZS`}
+              </h3>
+            </div>
+            <div className="p-2 bg-indigo-100 rounded-lg text-indigo-600">
+              <Wallet className="w-5 h-5" />
+            </div>
+          </div>
         </div>
       </div>
 
