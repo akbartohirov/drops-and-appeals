@@ -328,7 +328,6 @@ const DropCards = () => {
                   <th className="px-6 py-4 border-b border-outline-variant whitespace-nowrap">Karta raqami</th>
                   <th className="px-6 py-4 border-b border-outline-variant whitespace-nowrap">Bloklangan sana</th>
                   <th className="px-6 py-4 border-b border-outline-variant whitespace-nowrap">Qoldiq summasi (UZS)</th>
-                  <th className="px-6 py-4 border-b border-outline-variant whitespace-nowrap">Foydalanuvchi F.I.O</th>
                   <th className="px-6 py-4 border-b border-outline-variant whitespace-nowrap">Izoh / Bloklash sababi</th>
                   <th className="px-6 py-4 border-b border-outline-variant whitespace-nowrap">Bloklagan shaxs</th>
                   <th className="px-6 py-4 border-b border-outline-variant whitespace-nowrap">Yaratilgan vaqt</th>
@@ -351,14 +350,6 @@ const DropCards = () => {
                       </td>
                       <td className="px-6 py-4 font-bold text-on-surface whitespace-nowrap">
                         {card.balance.toLocaleString('uz-UZ')} UZS
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-2">
-                          <div className="w-7 h-7 bg-surface-container-high rounded-full flex items-center justify-center text-[10px] font-bold text-primary select-none">
-                            {card.holderName ? card.holderName.split(' ').slice(0, 2).map(n => n[0]).join('') : 'K'}
-                          </div>
-                          <span className="text-on-surface font-medium">{card.holderName}</span>
-                        </div>
                       </td>
                       <td className="px-6 py-4 max-w-[240px] truncate text-on-surface-variant">
                         {card.reason === 'shubhali' && (
