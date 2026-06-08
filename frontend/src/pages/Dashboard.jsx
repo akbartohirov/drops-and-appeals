@@ -267,10 +267,11 @@ const Dashboard = () => {
           const count = appealsData.filter(a => a.operatorId === user.id).length;
           return {
             id: user.id,
-            name: user.username === 'admin' ? 'Azizov B.' :
-              user.username === 'operator' ? 'Rahmonov A.' :
-                user.username === 'shaxriyor' ? 'Karimov Sh.' : 'Alisherova M.',
-            role: user.role === 'Admin' ? 'Bosh administrator' : 'Operator',
+            name: user.username === "admin" ? "Azizov B." :
+              user.username === "operator" ? "Rahmonov A." :
+                user.username === "shaxriyor" ? "Karimov Sh." :
+                  (user.username ? (user.username.charAt(0).toUpperCase() + user.username.slice(1)) : "Xodim"),
+            role: user.role === "Admin" ? "Bosh administrator" : "Operator",
             appealsCount: count,
             status: user.status
           };

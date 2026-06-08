@@ -192,8 +192,8 @@ const AdminPanel = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-3 py-0.5 rounded-full text-[10px] font-bold uppercase select-none ${u.role === 'Admin'
-                          ? 'bg-tertiary-fixed text-on-tertiary-fixed-variant'
-                          : 'bg-secondary-container text-on-secondary-container'
+                        ? 'bg-tertiary-fixed text-on-tertiary-fixed-variant'
+                        : 'bg-secondary-container text-on-secondary-container'
                         }`}>
                         {u.role}
                       </span>
@@ -203,8 +203,8 @@ const AdminPanel = () => {
                       <button
                         onClick={() => handleToggleStatus(u.id)}
                         className={`inline-flex items-center gap-1.5 px-3 py-1 border rounded-full text-[11px] font-semibold transition-all hover:bg-surface-container active:scale-95 ${u.status === 'Faol'
-                            ? 'text-emerald-700 border-emerald-300 bg-emerald-50'
-                            : 'text-outline border-outline-variant bg-surface'
+                          ? 'text-emerald-700 border-emerald-300 bg-emerald-50'
+                          : 'text-outline border-outline-variant bg-surface'
                           }`}
                         title="Foydalanuvchi holatini o'zgartirish"
                       >
@@ -249,7 +249,7 @@ const AdminPanel = () => {
                 required
                 value={formUsername}
                 onChange={(e) => setFormUsername(e.target.value)}
-                placeholder="Masalan: alisher_99"
+                placeholder="Username"
                 className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all text-body-md font-mono"
               />
             </div>

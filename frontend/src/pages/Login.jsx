@@ -30,10 +30,10 @@ const Login = () => {
       const user = await apiService.login(username, password);
       setSuccess(true);
       setIsLoading(false);
-      
+
       // Save active user in localStorage
       localStorage.setItem('active_user', JSON.stringify(user));
-      
+
       // Delay navigation to show success animation
       setTimeout(() => {
         const origin = location.state?.from?.pathname || '/dashboard';
@@ -58,7 +58,7 @@ const Login = () => {
         {/* Login Form Card */}
         <div className="bg-white p-8 rounded-xl border border-outline-variant shadow-lg">
           <h2 className="font-headline-sm text-headline-sm text-on-surface mb-6">Tizimga kirish</h2>
-          
+
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Error Message */}
             {errorMsg && (
@@ -83,7 +83,7 @@ const Login = () => {
                   onChange={(e) => setUsername(e.target.value)}
                   disabled={isLoading || success}
                   className="w-full pl-10 pr-4 py-3 bg-surface border border-outline-variant rounded-lg font-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all disabled:opacity-50"
-                  placeholder="admin_123 yoki operator"
+                  placeholder='username'
                 />
               </div>
             </div>
@@ -103,7 +103,7 @@ const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={isLoading || success}
                   className="w-full pl-10 pr-12 py-3 bg-surface border border-outline-variant rounded-lg font-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all disabled:opacity-50"
-                  placeholder="••••••••"
+                  placeholder='********'
                 />
                 <button
                   type="button"
@@ -133,11 +133,10 @@ const Login = () => {
             <button
               type="submit"
               disabled={isLoading || success}
-              className={`w-full font-label-md text-label-md py-4 rounded-lg transition-all duration-300 shadow-sm flex items-center justify-center gap-2 text-white font-semibold active:scale-[0.98] ${
-                success 
-                  ? 'bg-emerald-600' 
-                  : 'bg-primary-container hover:bg-primary'
-              }`}
+              className={`w-full font-label-md text-label-md py-4 rounded-lg transition-all duration-300 shadow-sm flex items-center justify-center gap-2 text-white font-semibold active:scale-[0.98] ${success
+                ? 'bg-emerald-600'
+                : 'bg-primary-container hover:bg-primary'
+                }`}
             >
               {isLoading ? (
                 <>

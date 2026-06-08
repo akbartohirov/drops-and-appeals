@@ -114,24 +114,18 @@ if (userCount.count === 0) {
     VALUES (?, ?, ?, ?)
   `);
 
-  // Standard passwords hashed (e.g. admin123 and operator123)
+  // Standard passwords hashed (e.g. admin123)
   const adminHash = bcrypt.hashSync("admin123", 10);
-  const operatorHash = bcrypt.hashSync("operator123", 10);
-  const shaxriyorHash = bcrypt.hashSync("shaxriyor123", 10);
-  const madinaHash = bcrypt.hashSync("madina_n123", 10);
 
   insertUser.run(1, "admin", adminHash, 1);
-  insertUser.run(2, "operator", operatorHash, 0);
-  insertUser.run(3, "shaxriyor", shaxriyorHash, 0);
-  insertUser.run(4, "madina_n", madinaHash, 1);
 
   // Seed Appeals
   const insertAppeal = db.prepare(`
     INSERT INTO appeals (id, applicant_name, phone, address, source_org, source_system, subject, direction, client_code, card, appeal_date, damage_amount, comment, status, created_by)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
-  insertAppeal.run(1, "Abdullayev Anvar", "998901234567", "Toshkent sh., Yunusobod 14-4", "ATB \"Hamkorbank\"", "MOBILE", "To'lov xatoligi", "Transaksiyalar", "CLI-90821", "8600123456784421", "2026-05-24", 1250000, "Pul yechildi, lekin tushmadi...", "Yangi", 2);
-  insertAppeal.run(2, "Sattorova Madina", "998934567890", "Samarqand sh., Registon k. 12", "MB Bosh ofisi", "WEB", "Kredit so'rovi", "Kreditlash", "CLI-45123", "9860054321001009", "2026-05-23", 0, "Kredit liniyasi ochilmadi", "Jarayonda", 3);
+  insertAppeal.run(1, "Abdullayev Anvar", "998901234567", "Toshkent sh., Yunusobod 14-4", "ATB \"Hamkorbank\"", "MOBILE", "To'lov xatoligi", "Transaksiyalar", "CLI-90821", "8600123456784421", "2026-05-24", 1250000, "Pul yechildi, lekin tushmadi...", "Yangi", 1);
+  insertAppeal.run(2, "Sattorova Madina", "998934567890", "Samarqand sh., Registon k. 12", "MB Bosh ofisi", "WEB", "Kredit so'rovi", "Kreditlash", "CLI-45123", "9860054321001009", "2026-05-23", 0, "Kredit liniyasi ochilmadi", "Jarayonda", 1);
   insertAppeal.run(3, "\"Global Logistics\" MCHJ", "998999990011", "Buxoro sh., S.Ayniy 45", "Xalq Banki", "ATM", "Naqdlashtirish xatosi", "Inkasatsiya", "CORP-001", "5614332211228877", "2026-05-22", 4000000, "ATM pulni bermadi, balansdan ayirildi", "Kritik", 1);
 
   // Seed Drop Cards
@@ -139,10 +133,10 @@ if (userCount.count === 0) {
     INSERT INTO drop_cards (id, card_number, blocked_at, balance, comment, blocked_by)
     VALUES (?, ?, ?, ?, ?, ?)
   `);
-  insertDropCard.run(1, "8600112233444912", "2026-05-24 14:22:15", 12450000, "Shubhali P2P tranzaksiyalar oqimi aniqlandi", 2);
-  insertDropCard.run(2, "5614321098768821", "2026-05-23 09:10:04", 2100000, "Kredit firibgarligi gumoni", 3);
+  insertDropCard.run(1, "8600112233444912", "2026-05-24 14:22:15", 12450000, "Shubhali P2P tranzaksiyalar oqimi aniqlandi", 1);
+  insertDropCard.run(2, "5614321098768821", "2026-05-23 09:10:04", 2100000, "Kredit firibgarligi gumoni", 1);
   insertDropCard.run(3, "4263998877660032", "2026-05-22 18:45:30", 58000200, "Huquqni muhofaza qilish organlari so'rovi", 1);
-  insertDropCard.run(4, "8600990088771199", "2026-05-22 10:05:01", 0, "E'tirozli hisob-kitoblar", 2);
+  insertDropCard.run(4, "8600990088771199", "2026-05-22 10:05:01", 0, "E'tirozli hisob-kitoblar", 1);
 
   console.log("Database seeded successfully.");
 }
@@ -156,8 +150,8 @@ if (fraudCount.count === 0) {
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
   
-  insertFraud.run(1, "Karta fishingi", "Telegram orqali soxta aksiya havolasi yuborilgan", "Eshonov Qobil", "2026-06-01", 5500000, "Karta bloklandi, bank arizasi yozildi", "Fishing bot aniqlandi", 2);
-  insertFraud.run(2, "P2P o'tkazma firibgarligi", "Olx.uz saytida soxta chek yuborib tovar o'zlashtirilgan", "Karimova Zilola", "2026-06-02", 12000000, "Ichki ishlar organlariga ma'lumot yuborildi", "Shubhali karta tranzaksiyalari tahlil qilindi", 3);
+  insertFraud.run(1, "Karta fishingi", "Telegram orqali soxta aksiya havolasi yuborilgan", "Eshonov Qobil", "2026-06-01", 5500000, "Karta bloklandi, bank arizasi yozildi", "Fishing bot aniqlandi", 1);
+  insertFraud.run(2, "P2P o'tkazma firibgarligi", "Olx.uz saytida soxta chek yuborib tovar o'zlashtirilgan", "Karimova Zilola", "2026-06-02", 12000000, "Ichki ishlar organlariga ma'lumot yuborildi", "Shubhali karta tranzaksiyalari tahlil qilindi", 1);
 
   const insertAttachment = db.prepare(`
     INSERT INTO fraud_attachments (id, fraud_id, original_name, file_path)

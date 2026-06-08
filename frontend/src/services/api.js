@@ -58,7 +58,7 @@ export const mapAppealToApi = (formData) => {
     damage_amount: Number(formData.lossAmount) || 0,
     comment: String(formData.comment || "").trim(),
     status: String(formData.status || "Yangi"),
-    created_by: formData.operatorId || 2
+    created_by: formData.operatorId || null
   };
 };
 
@@ -97,7 +97,7 @@ export const mapDropCardToApi = (formData) => {
     blocked_at: blockedAt,
     balance: Number(formData.balance) || 0,
     comment: String(formData.comment || "").trim(),
-    blocked_by: formData.operatorId || 2
+    blocked_by: formData.operatorId || null
   };
 };
 
