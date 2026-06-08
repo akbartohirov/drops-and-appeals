@@ -289,7 +289,7 @@ const FraudRegistry = () => {
             className="flex items-center gap-2 bg-emerald-600 text-white px-5 py-2.5 rounded-lg font-label-md text-label-md hover:bg-emerald-700 active:scale-95 transition-all shadow-sm"
           >
             <Plus className="w-5 h-5" />
-            <span>Yangi holat qo'shish</span>
+            <span>Yangi qo'shish</span>
           </button>
         </div>
       </div>
