@@ -76,6 +76,32 @@ db.exec(`
     FOREIGN KEY(blocked_by) REFERENCES users(id),
     FOREIGN KEY(updated_by) REFERENCES users(id)
   );
+
+  CREATE TABLE IF NOT EXISTS fraud_registry (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    fraud_type TEXT NOT NULL,
+    description TEXT NOT NULL,
+    victim_name TEXT NOT NULL,
+    fraud_date TEXT NOT NULL,
+    damage_amount INTEGER DEFAULT 0,
+    measures_taken TEXT,
+    comments TEXT,
+    created_by INTEGER,
+    updated_by INTEGER,
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT,
+    FOREIGN KEY(created_by) REFERENCES users(id),
+    FOREIGN KEY(updated_by) REFERENCES users(id)
+  );
+
+  CREATE TABLE IF NOT EXISTS fraud_attachments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    fraud_id INTEGER NOT NULL,
+    original_name TEXT NOT NULL,
+    file_path TEXT NOT NULL,
+    created_at TEXT DEFAULT (datetime('now')),
+    FOREIGN KEY(fraud_id) REFERENCES fraud_registry(id) ON DELETE CASCADE
+  );
 `);
 
 // Seed Initial Data if empty
@@ -119,6 +145,28 @@ if (userCount.count === 0) {
   insertDropCard.run(4, "8600990088771199", "2026-05-22 10:05:01", 0, "E'tirozli hisob-kitoblar", 2);
 
   console.log("Database seeded successfully.");
+}
+
+// Seed Fraud Registry if empty
+const fraudCount = db.prepare("SELECT COUNT(*) as count FROM fraud_registry").get();
+if (fraudCount.count === 0) {
+  console.log("Seeding initial fraud registry data...");
+  const insertFraud = db.prepare(`
+    INSERT INTO fraud_registry (id, fraud_type, description, victim_name, fraud_date, damage_amount, measures_taken, comments, created_by)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `);
+  
+  insertFraud.run(1, "Karta fishingi", "Telegram orqali soxta aksiya havolasi yuborilgan", "Eshonov Qobil", "2026-06-01", 5500000, "Karta bloklandi, bank arizasi yozildi", "Fishing bot aniqlandi", 2);
+  insertFraud.run(2, "P2P o'tkazma firibgarligi", "Olx.uz saytida soxta chek yuborib tovar o'zlashtirilgan", "Karimova Zilola", "2026-06-02", 12000000, "Ichki ishlar organlariga ma'lumot yuborildi", "Shubhali karta tranzaksiyalari tahlil qilindi", 3);
+
+  const insertAttachment = db.prepare(`
+    INSERT INTO fraud_attachments (id, fraud_id, original_name, file_path)
+    VALUES (?, ?, ?, ?)
+  `);
+  insertAttachment.run(1, 1, "soxta_havola_skrinshot.png", "/upload_files/sample_fishing.png");
+  insertAttachment.run(2, 2, "olx_yozishmalar.pdf", "/upload_files/sample_chat.pdf");
+  
+  console.log("Fraud registry seeded successfully.");
 }
 
 module.exports = db;

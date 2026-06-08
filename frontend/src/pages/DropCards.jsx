@@ -16,7 +16,8 @@ import {
   Wallet,
   FileSpreadsheet,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Clock
 } from 'lucide-react';
 
 const DropCards = () => {
@@ -329,6 +330,9 @@ const DropCards = () => {
                   <th className="px-6 py-4 border-b border-outline-variant whitespace-nowrap">Qoldiq summasi (UZS)</th>
                   <th className="px-6 py-4 border-b border-outline-variant whitespace-nowrap">Foydalanuvchi F.I.O</th>
                   <th className="px-6 py-4 border-b border-outline-variant whitespace-nowrap">Izoh / Bloklash sababi</th>
+                  <th className="px-6 py-4 border-b border-outline-variant whitespace-nowrap">Bloklagan shaxs</th>
+                  <th className="px-6 py-4 border-b border-outline-variant whitespace-nowrap">Yaratilgan vaqt</th>
+                  <th className="px-6 py-4 border-b border-outline-variant whitespace-nowrap">O'zgartirilgan vaqt</th>
                   <th className="px-6 py-4 border-b border-outline-variant text-right whitespace-nowrap">Amallar</th>
                 </tr>
               </thead>
@@ -380,6 +384,15 @@ const DropCards = () => {
                         <span className="ml-2 text-xs text-outline italic" title={card.comment}>
                           {card.comment ? `"${card.comment}"` : ''}
                         </span>
+                      </td>
+                      <td className="px-6 py-4 text-xs text-on-surface-variant whitespace-nowrap font-semibold text-primary">
+                        {card.creatorName || 'Noma\'lum'}
+                      </td>
+                      <td className="px-6 py-4 text-xs text-on-surface-variant font-mono whitespace-nowrap">
+                        {card.createdAt || '-'}
+                      </td>
+                      <td className="px-6 py-4 text-xs text-on-surface-variant font-mono whitespace-nowrap">
+                        {card.updatedAt || '-'}
                       </td>
                       <td className="px-6 py-4 text-right">
                         <button
@@ -664,6 +677,27 @@ const DropCards = () => {
                   <p className="text-xs text-on-surface-variant italic leading-normal">"{selectedCard.comment}"</p>
                 </div>
               )}
+              <div className="py-4 space-y-3 border-t border-outline-variant/30 mt-2">
+                <h5 className="text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-1.5">
+                  Tizim ma'lumotlari
+                </h5>
+                <div className="grid grid-cols-2 gap-3 text-xs bg-surface-container-low/30 p-3 rounded-lg border border-outline-variant/20">
+                  <div className="space-y-1">
+                    <span className="text-[10px] text-outline font-semibold uppercase flex items-center gap-1"><User className="w-3 h-3" /> Bloklagan shaxs</span>
+                    <p className="font-semibold text-on-surface">{selectedCard.creatorName || 'Noma\'lum'}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <span className="text-[10px] text-outline font-semibold uppercase flex items-center gap-1"><Clock className="w-3 h-3" /> Yaratilgan vaqt</span>
+                    <p className="font-semibold font-mono text-on-surface text-[11px]">{selectedCard.createdAt || '-'}</p>
+                  </div>
+                  {selectedCard.updatedAt && (
+                    <div className="space-y-1 col-span-2 border-t border-outline-variant/20 pt-2 mt-1">
+                      <span className="text-[10px] text-outline font-semibold uppercase flex items-center gap-1"><Clock className="w-3 h-3" /> O'zgartirilgan vaqt</span>
+                      <p className="font-semibold font-mono text-on-surface text-[11px]">{selectedCard.updatedAt}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
 
             <button

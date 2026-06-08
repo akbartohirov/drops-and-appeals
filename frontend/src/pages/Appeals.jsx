@@ -17,7 +17,9 @@ import {
   TrendingDown,
   CreditCard,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  User,
+  Clock
 } from 'lucide-react';
 
 const Appeals = () => {
@@ -438,6 +440,9 @@ const Appeals = () => {
                   <th className="px-6 py-4 whitespace-nowrap">Mijoz kodi</th>
                   <th className="px-6 py-4 whitespace-nowrap">Karta raqami</th>
                   <th className="px-6 py-4 whitespace-nowrap">Sana</th>
+                  <th className="px-6 py-4 whitespace-nowrap">Yaratuvchi</th>
+                  <th className="px-6 py-4 whitespace-nowrap">Yaratilgan vaqt</th>
+                  <th className="px-6 py-4 whitespace-nowrap">O'zgartirilgan vaqt</th>
                   <th className="px-6 py-4 whitespace-nowrap">Zarar summasi</th>
                   <th className="px-6 py-4 whitespace-nowrap text-right">Amallar</th>
                 </tr>
@@ -456,13 +461,8 @@ const Appeals = () => {
                       {appeal.phone ? `+${appeal.phone.replace(/(\d{3})(\d{2})(\d{3})(\d{2})(\d{2})/, '$1 ($2) $3-$4-$5')}` : ''}
                     </td>
                     <td className="px-6 py-4 text-on-surface-variant whitespace-nowrap">{appeal.organization}</td>
-                    <td className="px-6 py-4">
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold select-none ${appeal.system === 'MOBILE' ? 'bg-surface-variant text-primary' :
-                          appeal.system === 'WEB' ? 'bg-tertiary-fixed text-on-tertiary-fixed' :
-                            'bg-primary-fixed text-primary'
-                        }`}>
-                        {appeal.system}
-                      </span>
+                    <td className="px-6 py-4 max-w-[160px] truncate text-on-surface-variant" title={appeal.system}>
+                      {appeal.system}
                     </td>
                     <td className="px-6 py-4 font-medium text-on-primary-fixed-variant whitespace-nowrap">{appeal.direction}</td>
                     <td className="px-6 py-4 font-mono text-xs text-on-surface-variant">{appeal.clientCode}</td>
@@ -470,6 +470,15 @@ const Appeals = () => {
                       {formatCardSpaced(appeal.cardNumber)}
                     </td>
                     <td className="px-6 py-4 text-xs text-on-surface-variant whitespace-nowrap">{appeal.date}</td>
+                    <td className="px-6 py-4 text-xs text-on-surface-variant whitespace-nowrap font-semibold text-primary">
+                      {appeal.creatorName || 'Noma\'lum'}
+                    </td>
+                    <td className="px-6 py-4 text-xs text-on-surface-variant font-mono whitespace-nowrap">
+                      {appeal.createdAt || '-'}
+                    </td>
+                    <td className="px-6 py-4 text-xs text-on-surface-variant font-mono whitespace-nowrap">
+                      {appeal.updatedAt || '-'}
+                    </td>
                     <td className={`px-6 py-4 font-bold whitespace-nowrap ${appeal.lossAmount > 0 ? 'text-error' : 'text-on-surface-variant'}`}>
                       {appeal.lossAmount > 0 ? appeal.lossAmount.toLocaleString('uz-UZ') + ' UZS' : '0 UZS'}
                     </td>
@@ -677,15 +686,14 @@ const Appeals = () => {
             {/* 5. Tizim */}
             <div className="space-y-1">
               <label className="block font-label-md text-label-md text-on-surface-variant">Tizim</label>
-              <select
+              <input
+                type="text"
+                required
                 value={formSystem}
                 onChange={(e) => setFormSystem(e.target.value)}
-                className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2.5 text-body-md focus:ring-2 focus:ring-primary focus:border-transparent outline-none bg-white"
-              >
-                <option value="Mobile">Mobile</option>
-                <option value="Web">Web</option>
-                <option value="ATM">ATM</option>
-              </select>
+                placeholder="Tizim nomini kiriting (masalan: Mobile, Web, ATM...)"
+                className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2.5 text-body-md focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+              />
             </div>
 
             {/* 7. Yo'nalish (Dropdown [Karta, Kredit, Depozit, Boshqa]) */}
@@ -837,6 +845,27 @@ const Appeals = () => {
               <div className="col-span-2 space-y-1.5">
                 <span className="text-xs text-outline font-semibold uppercase flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" /> Manzili</span>
                 <p className="font-medium text-on-surface">{selectedAppeal.address}</p>
+              </div>
+              <div className="col-span-2 border-t border-outline-variant/30 pt-4 mt-2">
+                <h5 className="text-xs font-bold text-primary uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                  Tizim ma'lumotlari
+                </h5>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <span className="text-xs text-outline font-semibold uppercase flex items-center gap-1.5"><User className="w-3.5 h-3.5" /> Yaratuvchi</span>
+                    <p className="font-semibold text-on-surface">{selectedAppeal.creatorName || 'Noma\'lum'}</p>
+                  </div>
+                  <div className="space-y-1.5">
+                    <span className="text-xs text-outline font-semibold uppercase flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> Yaratilgan vaqt</span>
+                    <p className="font-semibold font-mono text-on-surface">{selectedAppeal.createdAt || '-'}</p>
+                  </div>
+                  {selectedAppeal.updatedAt && (
+                    <div className="space-y-1.5 col-span-2">
+                      <span className="text-xs text-outline font-semibold uppercase flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> O'zgartirilgan vaqt</span>
+                      <p className="font-semibold font-mono text-on-surface">{selectedAppeal.updatedAt}</p>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 

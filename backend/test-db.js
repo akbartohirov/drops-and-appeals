@@ -27,11 +27,21 @@ try {
   });
 
   // 3. Verify Drop Cards Table
-  console.log("\n[3/3] Testing drop_cards table...");
+  console.log("\n[3/4] Testing drop_cards table...");
   const cards = db.prepare("SELECT card_number, blocked_at, balance, comment FROM drop_cards").all();
   console.log(`Successfully fetched ${cards.length} blocked cards:`);
   cards.forEach(c => {
     console.log(`  - Card: ${c.card_number}, Blocked At: ${c.blocked_at}, Balance: ${c.balance} UZS, Comment: ${c.comment}`);
+  });
+
+  // 4. Verify Fraud Registry Table
+  console.log("\n[4/4] Testing fraud_registry table...");
+  const frauds = db.prepare("SELECT id, fraud_type, victim_name, damage_amount FROM fraud_registry").all();
+  console.log(`Successfully fetched ${frauds.length} fraud cases:`);
+  frauds.forEach(f => {
+    const attachments = db.prepare("SELECT original_name FROM fraud_attachments WHERE fraud_id = ?").all(f.id);
+    const filesStr = attachments.map(a => a.original_name).join(", ") || "Fayl yo'q";
+    console.log(`  - Fraud Case ID: ${f.id}, Type: ${f.fraud_type}, Victim: ${f.victim_name}, Loss: ${f.damage_amount} UZS, Files: [${filesStr}]`);
   });
 
   console.log("\n--- NEW VERIFICATION TEST COMPLETED: SUCCESS ---");

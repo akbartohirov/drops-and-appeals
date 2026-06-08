@@ -5,7 +5,8 @@ import {
   FileText, 
   CreditCard, 
   ShieldAlert, 
-  LogOut 
+  LogOut,
+  AlertTriangle
 } from 'lucide-react';
 
 const Sidebar = () => {
@@ -37,6 +38,12 @@ const Sidebar = () => {
       to: '/drop-cards',
       label: 'Drop kartalar',
       icon: <CreditCard className="w-5 h-5" />,
+      show: true
+    },
+    {
+      to: '/fraud',
+      label: 'Fraud reyestri',
+      icon: <AlertTriangle className="w-5 h-5" />,
       show: true
     },
     {

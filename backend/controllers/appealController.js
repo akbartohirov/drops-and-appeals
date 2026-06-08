@@ -4,7 +4,7 @@ exports.getAppeals = async (req, res) => {
   const { page = 1, limit = 10, search, startDate, endDate, direction, system } = req.query;
 
   try {
-    let query = "SELECT * FROM appeals";
+    let query = "SELECT appeals.*, u1.username AS creator_name, u2.username AS updater_name FROM appeals LEFT JOIN users u1 ON appeals.created_by = u1.id LEFT JOIN users u2 ON appeals.updated_by = u2.id";
     let countQuery = "SELECT COUNT(*) as count FROM appeals";
     let params = [];
     let conditions = [];
@@ -45,7 +45,7 @@ exports.getAppeals = async (req, res) => {
       countQuery += whereClause;
     }
 
-    query += " ORDER BY appeal_date DESC, created_at DESC";
+    query += " ORDER BY appeal_date DESC, appeals.created_at DESC";
 
     const totalCountResult = db.prepare(countQuery).get(...params);
     const totalItems = totalCountResult.count || 0;
@@ -130,7 +130,13 @@ exports.createAppeal = async (req, res) => {
       operatorId
     );
 
-    const created = db.prepare("SELECT * FROM appeals WHERE id = ?").get(info.lastInsertRowid);
+    const created = db.prepare(`
+      SELECT appeals.*, u1.username AS creator_name, u2.username AS updater_name
+      FROM appeals
+      LEFT JOIN users u1 ON appeals.created_by = u1.id
+      LEFT JOIN users u2 ON appeals.updated_by = u2.id
+      WHERE appeals.id = ?
+    `).get(info.lastInsertRowid);
     res.status(201).json(created);
   } catch (err) {
     console.error(err);

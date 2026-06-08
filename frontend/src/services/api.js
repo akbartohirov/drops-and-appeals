@@ -36,7 +36,11 @@ export const mapAppealFromApi = (apiData) => ({
   lossAmount: Number(apiData.damage_amount) || 0,
   comment: apiData.comment || "",
   status: apiData.status || "Yangi",
-  operatorId: apiData.created_by || ""
+  operatorId: apiData.created_by || "",
+  creatorName: apiData.creator_name || "",
+  updaterName: apiData.updater_name || "",
+  createdAt: apiData.created_at || "",
+  updatedAt: apiData.updated_at || ""
 });
 
 export const mapAppealToApi = (formData) => {
@@ -73,7 +77,11 @@ export const mapDropCardFromApi = (apiData) => {
     holderName: "Mijoz",
     reason: "boshqa",
     comment: apiData.comment || "",
-    operatorId: apiData.blocked_by || ""
+    operatorId: apiData.blocked_by || "",
+    creatorName: apiData.creator_name || "",
+    updaterName: apiData.updater_name || "",
+    createdAt: apiData.created_at || "",
+    updatedAt: apiData.updated_at || ""
   };
 };
 
@@ -109,6 +117,28 @@ export const mapUserToApi = (formData) => {
     created_at: formData.createdDate || new Date().toLocaleDateString("uz-UZ", { day: 'numeric', month: 'long', year: 'numeric' })
   };
 };
+
+export const mapFraudFromApi = (apiData) => ({
+  id: apiData.id ? String(apiData.id) : "",
+  fraudType: apiData.fraud_type || "",
+  description: apiData.description || "",
+  victimName: apiData.victim_name || "",
+  fraudDate: apiData.fraud_date || "",
+  damageAmount: Number(apiData.damage_amount) || 0,
+  measuresTaken: apiData.measures_taken || "",
+  comments: apiData.comments || "",
+  creatorName: apiData.creator_name || "",
+  updaterName: apiData.updater_name || "",
+  createdById: apiData.created_by ? String(apiData.created_by) : "",
+  updatedById: apiData.updated_by ? String(apiData.updated_by) : "",
+  createdAt: apiData.created_at || "",
+  updatedAt: apiData.updated_at || "",
+  attachments: (apiData.attachments || []).map(a => ({
+    id: a.id ? String(a.id) : "",
+    originalName: a.originalName || a.original_name || "",
+    filePath: a.filePath || a.file_path || ""
+  }))
+});
 
 // ==========================================
 // ASYNCHRONOUS API SERVICES (REAL BACKEND)
@@ -294,5 +324,70 @@ export const apiService = {
 
     const updated = await res.json();
     return mapUserFromApi(updated);
+  },
+
+  // 5. Fraud Registry (Firibgarlik holatlari)
+  getFrauds: async () => {
+    const res = await fetch(`${BASE_URL}/fraud`, {
+      headers: getHeaders()
+    });
+
+    if (!res.ok) {
+      const errData = await res.json();
+      throw new Error(errData.message || 'Firibgarlik holatlarini yuklashda xatolik!');
+    }
+
+    const raw = await res.json();
+    return raw.map(mapFraudFromApi);
+  },
+
+  createFraud: async (formData) => {
+    const res = await fetch(`${BASE_URL}/fraud`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('active_token')}`
+      },
+      body: formData
+    });
+
+    if (!res.ok) {
+      const errData = await res.json();
+      throw new Error(errData.message || 'Firibgarlik holatini saqlashda xatolik!');
+    }
+
+    const created = await res.json();
+    return mapFraudFromApi(created);
+  },
+
+  deleteFraud: async (fraudId) => {
+    const res = await fetch(`${BASE_URL}/fraud/${fraudId}`, {
+      method: 'DELETE',
+      headers: getHeaders()
+    });
+
+    if (!res.ok) {
+      const errData = await res.json();
+      throw new Error(errData.message || 'Firibgarlik holatini o\'chirishda xatolik!');
+    }
+
+    return await res.json();
+  },
+
+  updateFraud: async (fraudId, formData) => {
+    const res = await fetch(`${BASE_URL}/fraud/${fraudId}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('active_token')}`
+      },
+      body: formData
+    });
+
+    if (!res.ok) {
+      const errData = await res.json();
+      throw new Error(errData.message || 'Firibgarlik holatini yangilashda xatolik!');
+    }
+
+    const updated = await res.json();
+    return mapFraudFromApi(updated);
   }
 };

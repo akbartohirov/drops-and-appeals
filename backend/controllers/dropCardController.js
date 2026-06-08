@@ -4,7 +4,7 @@ exports.getDropCards = async (req, res) => {
   const { page = 1, limit = 10, search, startDate, endDate } = req.query;
 
   try {
-    let query = "SELECT * FROM drop_cards";
+    let query = "SELECT drop_cards.*, u1.username AS creator_name, u2.username AS updater_name FROM drop_cards LEFT JOIN users u1 ON drop_cards.blocked_by = u1.id LEFT JOIN users u2 ON drop_cards.updated_by = u2.id";
     let countQuery = "SELECT COUNT(*) as count, SUM(balance) as totalAmount FROM drop_cards";
     let params = [];
     let conditions = [];
@@ -35,7 +35,7 @@ exports.getDropCards = async (req, res) => {
       countQuery += whereClause;
     }
 
-    query += " ORDER BY blocked_at DESC, created_at DESC";
+    query += " ORDER BY blocked_at DESC, drop_cards.created_at DESC";
 
     const totalStats = db.prepare(countQuery).get(...params);
     const totalItems = totalStats.count || 0;
@@ -109,7 +109,13 @@ exports.createDropCard = async (req, res) => {
       operatorId
     );
 
-    const created = db.prepare("SELECT * FROM drop_cards WHERE id = ?").get(info.lastInsertRowid);
+    const created = db.prepare(`
+      SELECT drop_cards.*, u1.username AS creator_name, u2.username AS updater_name
+      FROM drop_cards
+      LEFT JOIN users u1 ON drop_cards.blocked_by = u1.id
+      LEFT JOIN users u2 ON drop_cards.updated_by = u2.id
+      WHERE drop_cards.id = ?
+    `).get(info.lastInsertRowid);
     res.status(201).json(created);
   } catch (err) {
     console.error(err);

@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard';
 import Appeals from './pages/Appeals';
 import DropCards from './pages/DropCards';
 import AdminPanel from './pages/AdminPanel';
+import FraudRegistry from './pages/FraudRegistry';
 
 // Main layout wrapper for authenticated routes
 const MainLayout = ({ children }) => {
@@ -60,6 +61,14 @@ function App() {
           <ProtectedRoute>
             <MainLayout>
               <DropCards />
+            </MainLayout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/fraud" element={
+          <ProtectedRoute>
+            <MainLayout>
+              <FraudRegistry />
             </MainLayout>
           </ProtectedRoute>
         } />
