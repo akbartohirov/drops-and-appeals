@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { apiService } from '../services/api';
+import { apiService, formatDate } from "../services/api";
 import {
   FileText,
   DollarSign,
@@ -437,7 +437,7 @@ const Dashboard = () => {
                         <div className="text-[10px] text-outline font-mono">ID: {appeal.id}</div>
                       </td>
                       <td className="px-6 py-4 text-sm text-on-surface-variant font-medium">{appeal.subject}</td>
-                      <td className="px-6 py-4 text-xs text-outline">{appeal.date}</td>
+                      <td className="px-6 py-4 text-xs text-outline">{formatDate(appeal.date)}</td>
                       <td className="px-6 py-4">
                         <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase select-none ${appeal.status === 'Kritik'
                             ? 'bg-error-container text-error'

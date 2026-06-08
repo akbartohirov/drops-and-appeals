@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { apiService } from '../services/api';
+import { apiService, formatDate } from "../services/api";
 import ExcelExport from '../components/ExcelExport';
 import Modal from '../components/Modal';
 import {
@@ -468,15 +468,15 @@ const Appeals = () => {
                     <td className="px-6 py-4 font-mono text-xs tracking-tight text-on-surface-variant whitespace-nowrap">
                       {formatCardSpaced(appeal.cardNumber)}
                     </td>
-                    <td className="px-6 py-4 text-xs text-on-surface-variant whitespace-nowrap">{appeal.date}</td>
+                    <td className="px-6 py-4 text-xs text-on-surface-variant whitespace-nowrap">{formatDate(appeal.date)}</td>
                     <td className="px-6 py-4 text-xs text-on-surface-variant whitespace-nowrap font-semibold text-primary">
                       {appeal.creatorName || 'Noma\'lum'}
                     </td>
                     <td className="px-6 py-4 text-xs text-on-surface-variant font-mono whitespace-nowrap">
-                      {appeal.createdAt || '-'}
+                      {formatDate(appeal.createdAt) || '-'}
                     </td>
                     <td className="px-6 py-4 text-xs text-on-surface-variant font-mono whitespace-nowrap">
-                      {appeal.updatedAt || '-'}
+                      {formatDate(appeal.updatedAt) || '-'}
                     </td>
                     <td className={`px-6 py-4 font-bold whitespace-nowrap ${appeal.lossAmount > 0 ? 'text-error' : 'text-on-surface-variant'}`}>
                       {appeal.lossAmount > 0 ? appeal.lossAmount.toLocaleString('uz-UZ') + ' UZS' : '0 UZS'}
@@ -830,7 +830,7 @@ const Appeals = () => {
               </div>
               <div className="space-y-1.5">
                 <span className="text-xs text-outline font-semibold uppercase flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5" /> Sana</span>
-                <p className="font-semibold text-on-surface">{selectedAppeal.date}</p>
+                <p className="font-semibold text-on-surface">{formatDate(selectedAppeal.date)}</p>
               </div>
               <div className="space-y-1.5">
                 <span className="text-xs text-outline font-semibold uppercase flex items-center gap-1.5"><TrendingDown className="w-3.5 h-3.5" /> Zarar summasi</span>
@@ -853,12 +853,12 @@ const Appeals = () => {
                   </div>
                   <div className="space-y-1.5">
                     <span className="text-xs text-outline font-semibold uppercase flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> Yaratilgan vaqt</span>
-                    <p className="font-semibold font-mono text-on-surface">{selectedAppeal.createdAt || '-'}</p>
+                    <p className="font-semibold font-mono text-on-surface">{formatDate(selectedAppeal.createdAt) || "-"}</p>
                   </div>
                   {selectedAppeal.updatedAt && (
                     <div className="space-y-1.5 col-span-2">
                       <span className="text-xs text-outline font-semibold uppercase flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> O'zgartirilgan vaqt</span>
-                      <p className="font-semibold font-mono text-on-surface">{selectedAppeal.updatedAt}</p>
+                      <p className="font-semibold font-mono text-on-surface">{formatDate(selectedAppeal.updatedAt)}</p>
                     </div>
                   )}
                 </div>

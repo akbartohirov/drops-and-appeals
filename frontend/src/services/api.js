@@ -391,3 +391,30 @@ export const apiService = {
     return mapFraudFromApi(updated);
   }
 };
+
+export const formatDate = (dateStr) => {
+  if (!dateStr) return "";
+  let datePart = dateStr;
+  let timePart = "";
+  if (dateStr.includes(" ")) {
+    const parts = dateStr.split(" ");
+    datePart = parts[0];
+    timePart = parts.slice(1).join(" ");
+  } else if (dateStr.includes("T")) {
+    const parts = dateStr.split("T");
+    datePart = parts[0];
+    timePart = parts[1];
+    if (timePart.includes(".")) {
+      timePart = timePart.split(".")[0];
+    } else if (timePart.endsWith("Z")) {
+      timePart = timePart.slice(0, -1);
+    }
+  }
+  const parts = datePart.split("-");
+  if (parts.length === 3) {
+    const [year, month, day] = parts;
+    const formattedDate = `${day}.${month}.${year}`;
+    return timePart ? `${formattedDate} ${timePart}` : formattedDate;
+  }
+  return dateStr;
+};

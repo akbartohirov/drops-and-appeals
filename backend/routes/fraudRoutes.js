@@ -18,7 +18,12 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
     const ext = path.extname(file.originalname);
-    const baseName = path.basename(file.originalname, ext).replace(/[^a-zA-Z0-9]/g, "_");
+    let decodedName = file.originalname;
+    try {
+      decodedName = Buffer.from(file.originalname, "latin1").toString("utf8");
+    } catch (err) {}
+    const rawBase = path.basename(decodedName, ext);
+    const baseName = rawBase.replace(/[^\p{L}\p{N}_'-]/gu, "_");
     cb(null, `${baseName}-${uniqueSuffix}${ext}`);
   }
 });

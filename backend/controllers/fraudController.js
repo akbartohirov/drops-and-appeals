@@ -2,6 +2,32 @@ const db = require("../config/db");
 const fs = require("fs");
 const path = require("path");
 
+const BANNED_EXTENSIONS = [".js", ".mjs", ".ts", ".html", ".htm", ".php", ".phtml", ".exe", ".dll", ".sh", ".bat", ".cmd", ".py", ".pl", ".jsp", ".asp", ".aspx", ".cgi", ".jar", ".vbs"];
+
+const getSuspiciousFiles = (files) => {
+  const suspicious = [];
+  for (const file of files) {
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (BANNED_EXTENSIONS.includes(ext)) {
+      suspicious.push(file.originalname);
+    }
+  }
+  return suspicious;
+};
+
+const cleanupUploadedFiles = (files) => {
+  for (const file of files) {
+    const filePath = path.join(__dirname, "../upload_files", file.filename);
+    if (fs.existsSync(filePath)) {
+      try {
+        fs.unlinkSync(filePath);
+      } catch (err) {
+        console.error("Faylni o'chirishda xatolik:", err.message);
+      }
+    }
+  }
+};
+
 exports.getFrauds = async (req, res) => {
   try {
     const frauds = db.prepare(`
@@ -40,6 +66,14 @@ exports.createFraud = async (req, res) => {
     return res.status(400).json({ message: "Majburiy maydonlar to'ldirilishi shart!" });
   }
 
+  const suspicious = getSuspiciousFiles(files);
+  if (suspicious.length > 0) {
+    cleanupUploadedFiles(files);
+    return res.status(400).json({
+      message: `Yuklangan fayllar orasida taqiqlangan formatdagi shubhali fayl(lar) aniqlandi: ${suspicious.join(", ")}. Tizim xavfsizligi sababli dasturiy script yoki ishga tushuvchi fayllarni yuklash taqiqlanadi!`
+    });
+  }
+
   try {
     const insertTransaction = db.transaction((data, fileList) => {
       const stmt = db.prepare(`
@@ -65,7 +99,11 @@ exports.createFraud = async (req, res) => {
       `);
 
       for (const file of fileList) {
-        attachStmt.run(fraudId, file.originalname, `/upload_files/${file.filename}`);
+        let decodedName = file.originalname;
+        try {
+          decodedName = Buffer.from(file.originalname, "latin1").toString("utf8");
+        } catch (err) {}
+        attachStmt.run(fraudId, decodedName, `/upload_files/${file.filename}`);
       }
 
       return fraudId;
@@ -141,6 +179,14 @@ exports.updateFraud = async (req, res) => {
     return res.status(400).json({ message: "Majburiy maydonlar to'ldirilishi shart!" });
   }
 
+  const suspicious = getSuspiciousFiles(files);
+  if (suspicious.length > 0) {
+    cleanupUploadedFiles(files);
+    return res.status(400).json({
+      message: `Yuklangan fayllar orasida taqiqlangan formatdagi shubhali fayl(lar) aniqlandi: ${suspicious.join(", ")}. Tizim xavfsizligi sababli dasturiy script yoki ishga tushuvchi fayllarni yuklash taqiqlanadi!`
+    });
+  }
+
   try {
     const updateTransaction = db.transaction((data, fileList) => {
       const updateStmt = db.prepare(`
@@ -203,7 +249,11 @@ exports.updateFraud = async (req, res) => {
       `);
 
       for (const file of fileList) {
-        attachStmt.run(data.id, file.originalname, `/upload_files/${file.filename}`);
+        let decodedName = file.originalname;
+        try {
+          decodedName = Buffer.from(file.originalname, "latin1").toString("utf8");
+        } catch (err) {}
+        attachStmt.run(data.id, decodedName, `/upload_files/${file.filename}`);
       }
 
       return data.id;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { apiService } from '../services/api';
+import { apiService, formatDate } from "../services/api";
 import ExcelExport from '../components/ExcelExport';
 import Modal from '../components/Modal';
 import {
@@ -119,11 +119,20 @@ const FraudRegistry = () => {
     handleFilter();
   }, [searchTerm, startDate, endDate, frauds]);
 
-  // Handle file selections
+  // Handle file selections (appends and deduplicates)
   const handleFileChange = (e) => {
     if (e.target.files) {
-      setSelectedFiles(Array.from(e.target.files));
+      const newFiles = Array.from(e.target.files);
+      setSelectedFiles((prev) => {
+        const filtered = newFiles.filter(nf => !prev.some(pf => pf.name === nf.name && pf.size === nf.size));
+        return [...prev, ...filtered];
+      });
     }
+  };
+
+  // Remove a newly selected file from the upload list
+  const handleRemoveSelectedFile = (indexToRemove) => {
+    setSelectedFiles((prev) => prev.filter((_, idx) => idx !== indexToRemove));
   };
 
   // Open Add modal and clear inputs
@@ -434,7 +443,7 @@ const FraudRegistry = () => {
                       {formatUZS(fraud.damageAmount)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-on-surface font-semibold">
-                      {fraud.fraudDate}
+                      {formatDate(fraud.fraudDate)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {fraud.attachments && fraud.attachments.length > 0 ? (
@@ -591,8 +600,19 @@ const FraudRegistry = () => {
                   <ul className="divide-y divide-outline-variant/30 border border-outline-variant rounded-lg bg-surface-container-low/30 overflow-hidden">
                     {selectedFiles.map((f, i) => (
                       <li key={i} className="px-3 py-2 text-xs flex justify-between items-center text-on-surface-variant font-medium font-mono">
-                        <span>{f.name}</span>
-                        <span className="text-[10px] text-outline">({(f.size / 1024).toFixed(1)} KB)</span>
+                        <div className="flex items-center gap-1.5 overflow-hidden">
+                          <FileText className="w-3.5 h-3.5 text-primary flex-shrink-0" />
+                          <span className="truncate max-w-[200px]" title={f.name}>{f.name}</span>
+                          <span className="text-[10px] text-outline flex-shrink-0">({(f.size / 1024).toFixed(1)} KB)</span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveSelectedFile(i)}
+                          className="text-red-500 hover:text-red-700 p-1 hover:bg-red-50 rounded-full transition-colors"
+                          title="Faylni o'chirish"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
                       </li>
                     ))}
                   </ul>
@@ -775,8 +795,19 @@ const FraudRegistry = () => {
                   <ul className="divide-y divide-outline-variant/30 border border-outline-variant rounded-lg bg-surface-container-low/30 overflow-hidden">
                     {selectedFiles.map((f, i) => (
                       <li key={i} className="px-3 py-2 text-xs flex justify-between items-center text-on-surface-variant font-medium font-mono">
-                        <span>{f.name}</span>
-                        <span className="text-[10px] text-outline">({(f.size / 1024).toFixed(1)} KB)</span>
+                        <div className="flex items-center gap-1.5 overflow-hidden">
+                          <FileText className="w-3.5 h-3.5 text-primary flex-shrink-0" />
+                          <span className="truncate max-w-[200px]" title={f.name}>{f.name}</span>
+                          <span className="text-[10px] text-outline flex-shrink-0">({(f.size / 1024).toFixed(1)} KB)</span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveSelectedFile(i)}
+                          className="text-red-500 hover:text-red-700 p-1 hover:bg-red-50 rounded-full transition-colors"
+                          title="Faylni o'chirish"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
                       </li>
                     ))}
                   </ul>
@@ -840,7 +871,7 @@ const FraudRegistry = () => {
               <div className="space-y-1">
                 <span className="block text-xs font-bold text-outline uppercase">Aniqlangan Sana:</span>
                 <p className="font-medium bg-surface-container-low/20 px-3 py-2 rounded-lg border border-outline-variant/30 flex items-center gap-2">
-                  <Calendar className="w-4.5 h-4.5 text-primary" /> {selectedFraud.fraudDate}
+                  <Calendar className="w-4.5 h-4.5 text-primary" /> {formatDate(selectedFraud.fraudDate)}
                 </p>
               </div>
 
@@ -860,9 +891,9 @@ const FraudRegistry = () => {
 
               {/* Log details */}
               <div className="text-xs text-outline space-y-1 bg-surface-container-low/30 p-3 rounded-lg border border-outline-variant/40 col-span-2">
-                <p>Kiritgan xodim: <span className="font-bold text-on-surface-variant">{selectedFraud.creatorName || 'Operator'}</span> ({selectedFraud.createdAt})</p>
+                <p>Kiritgan xodim: <span className="font-bold text-on-surface-variant">{selectedFraud.creatorName || 'Operator'}</span> ({formatDate(selectedFraud.createdAt)})</p>
                 {selectedFraud.updatedAt && (
-                  <p>Oxirgi tahrirlovchi: <span className="font-bold text-on-surface-variant">{selectedFraud.updaterName || 'Admin'}</span> ({selectedFraud.updatedAt})</p>
+                  <p>Oxirgi tahrirlovchi: <span className="font-bold text-on-surface-variant">{selectedFraud.updaterName || 'Admin'}</span> ({formatDate(selectedFraud.updatedAt)})</p>
                 )}
               </div>
             </div>

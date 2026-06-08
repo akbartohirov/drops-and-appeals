@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { apiService } from '../services/api';
+import { apiService, formatDate } from "../services/api";
 import ExcelExport from '../components/ExcelExport';
 import Modal from '../components/Modal';
 import {
@@ -344,7 +344,7 @@ const DropCards = () => {
                         </p>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <p className="text-on-surface font-semibold">{card.blockDate}</p>
+                        <p className="text-on-surface font-semibold">{formatDate(card.blockDate)}</p>
                         <p className="text-[10px] text-outline font-mono leading-none">{card.blockTime}</p>
                       </td>
                       <td className="px-6 py-4 font-bold text-on-surface whitespace-nowrap">
@@ -379,10 +379,10 @@ const DropCards = () => {
                         {card.creatorName || 'Noma\'lum'}
                       </td>
                       <td className="px-6 py-4 text-xs text-on-surface-variant font-mono whitespace-nowrap">
-                        {card.createdAt || '-'}
+                        {formatDate(card.createdAt) || '-'}
                       </td>
                       <td className="px-6 py-4 text-xs text-on-surface-variant font-mono whitespace-nowrap">
-                        {card.updatedAt || '-'}
+                        {formatDate(card.updatedAt) || '-'}
                       </td>
                       <td className="px-6 py-4 text-right">
                         <button
@@ -635,7 +635,7 @@ const DropCards = () => {
                 </div>
                 <div className="text-right">
                   <p className="text-[8px] uppercase opacity-70 leading-none mb-1">Block Date</p>
-                  <p className="font-semibold font-mono text-xs">{selectedCard.blockDate}</p>
+                  <p className="font-semibold font-mono text-xs">{formatDate(selectedCard.blockDate)}</p>
                 </div>
               </div>
             </div>
@@ -675,12 +675,12 @@ const DropCards = () => {
                   </div>
                   <div className="space-y-1">
                     <span className="text-[10px] text-outline font-semibold uppercase flex items-center gap-1"><Clock className="w-3 h-3" /> Yaratilgan vaqt</span>
-                    <p className="font-semibold font-mono text-on-surface text-[11px]">{selectedCard.createdAt || '-'}</p>
+                    <p className="font-semibold font-mono text-on-surface text-[11px]">{formatDate(selectedCard.createdAt) || "-"}</p>
                   </div>
                   {selectedCard.updatedAt && (
                     <div className="space-y-1 col-span-2 border-t border-outline-variant/20 pt-2 mt-1">
                       <span className="text-[10px] text-outline font-semibold uppercase flex items-center gap-1"><Clock className="w-3 h-3" /> O'zgartirilgan vaqt</span>
-                      <p className="font-semibold font-mono text-on-surface text-[11px]">{selectedCard.updatedAt}</p>
+                      <p className="font-semibold font-mono text-on-surface text-[11px]">{formatDate(selectedCard.updatedAt)}</p>
                     </div>
                   )}
                 </div>
