@@ -1,6 +1,7 @@
 # Dependency directories
 node_modules/
 **/node_modules/
+**/data/
 
 # Production build outputs
 dist/
@@ -31,3 +32,4 @@ Thumbs.db
 *.njsproj
 *.sln
 *.sw?
+
