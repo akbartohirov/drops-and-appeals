@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiService } from '../services/api';
-import { 
-  FileText, 
-  DollarSign, 
-  CreditCard, 
-  TrendingUp, 
-  TrendingDown, 
-  Eye, 
+import {
+  FileText,
+  DollarSign,
+  CreditCard,
+  TrendingUp,
+  TrendingDown,
+  Eye,
   ArrowRight,
   UserCheck2
 } from 'lucide-react';
@@ -18,7 +18,7 @@ const PremiumLineChart = ({ data, timeFilter }) => {
   const [svgWidth, setSvgWidth] = useState(800);
   const svgHeight = 250;
   const containerRef = React.useRef(null);
-  
+
   // Responsive handling
   useEffect(() => {
     if (!containerRef.current) return;
@@ -58,7 +58,7 @@ const PremiumLineChart = ({ data, timeFilter }) => {
   };
 
   const linePath = getSvgPath(points);
-  
+
   // Path for gradient fill
   const fillPath = points.length > 0
     ? `${linePath} L ${points[points.length - 1].x} ${svgHeight - padding.bottom} L ${points[0].x} ${svgHeight - padding.bottom} Z`
@@ -68,10 +68,10 @@ const PremiumLineChart = ({ data, timeFilter }) => {
     if (!containerRef.current || points.length === 0) return;
     const rect = containerRef.current.getBoundingClientRect();
     const mouseX = e.clientX - rect.left;
-    
+
     let nearestIndex = 0;
     let minDistance = Infinity;
-    
+
     points.forEach((pt, index) => {
       const dist = Math.abs(pt.x - mouseX);
       if (dist < minDistance) {
@@ -79,7 +79,7 @@ const PremiumLineChart = ({ data, timeFilter }) => {
         nearestIndex = index;
       }
     });
-    
+
     setHoveredIndex(nearestIndex);
   };
 
@@ -109,18 +109,18 @@ const PremiumLineChart = ({ data, timeFilter }) => {
           const labelVal = Math.round(tick * yMax);
           return (
             <g key={index} className="opacity-40">
-              <line 
-                x1={padding.left} 
-                y1={yVal} 
-                x2={svgWidth - padding.right} 
-                y2={yVal} 
-                stroke="#E5E7EB" 
-                strokeDasharray="4,4" 
+              <line
+                x1={padding.left}
+                y1={yVal}
+                x2={svgWidth - padding.right}
+                y2={yVal}
+                stroke="#E5E7EB"
+                strokeDasharray="4,4"
               />
-              <text 
-                x={padding.left - 12} 
-                y={yVal + 4} 
-                textAnchor="end" 
+              <text
+                x={padding.left - 12}
+                y={yVal + 4}
+                textAnchor="end"
                 className="text-[10px] fill-outline font-semibold font-mono"
               >
                 {labelVal}
@@ -134,13 +134,13 @@ const PremiumLineChart = ({ data, timeFilter }) => {
           // If monthly view (30 days), show every 3rd day to avoid cluttering labels
           const shouldShowLabel = !isOylik || (index === 0 || index === points.length - 1 || (index + 1) % 3 === 0);
           if (!shouldShowLabel) return null;
-          
+
           return (
-            <text 
-              key={index} 
-              x={pt.x} 
-              y={svgHeight - padding.bottom + 20} 
-              textAnchor="middle" 
+            <text
+              key={index}
+              x={pt.x}
+              y={svgHeight - padding.bottom + 20}
+              textAnchor="middle"
               className="text-[10px] fill-outline font-semibold"
             >
               {isOylik ? `${pt.label}` : pt.label}
@@ -155,11 +155,11 @@ const PremiumLineChart = ({ data, timeFilter }) => {
 
         {/* Spline Path */}
         {points.length > 0 && linePath && (
-          <path 
-            d={linePath} 
-            fill="none" 
-            stroke="#003366" 
-            strokeWidth={3} 
+          <path
+            d={linePath}
+            fill="none"
+            stroke="#003366"
+            strokeWidth={3}
             strokeLinecap="round"
             filter="url(#line-shadow)"
           />
@@ -168,36 +168,36 @@ const PremiumLineChart = ({ data, timeFilter }) => {
         {/* Interactive glow-point & grid line on hover */}
         {hoveredIndex !== null && points[hoveredIndex] && (
           <g>
-            <line 
-              x1={points[hoveredIndex].x} 
-              y1={padding.top} 
-              x2={points[hoveredIndex].x} 
-              y2={svgHeight - padding.bottom} 
-              stroke="#003366" 
-              strokeWidth={1} 
-              strokeDasharray="3,3" 
+            <line
+              x1={points[hoveredIndex].x}
+              y1={padding.top}
+              x2={points[hoveredIndex].x}
+              y2={svgHeight - padding.bottom}
+              stroke="#003366"
+              strokeWidth={1}
+              strokeDasharray="3,3"
               className="opacity-50"
             />
-            <circle 
-              cx={points[hoveredIndex].x} 
-              cy={points[hoveredIndex].y} 
-              r={8} 
-              fill="#003366" 
+            <circle
+              cx={points[hoveredIndex].x}
+              cy={points[hoveredIndex].y}
+              r={8}
+              fill="#003366"
               className="opacity-20 animate-ping"
             />
-            <circle 
-              cx={points[hoveredIndex].x} 
-              cy={points[hoveredIndex].y} 
-              r={5} 
-              fill="#FFFFFF" 
-              stroke="#003366" 
-              strokeWidth={3} 
+            <circle
+              cx={points[hoveredIndex].x}
+              cy={points[hoveredIndex].y}
+              r={5}
+              fill="#FFFFFF"
+              stroke="#003366"
+              strokeWidth={3}
             />
-            <circle 
-              cx={points[hoveredIndex].x} 
-              cy={points[hoveredIndex].y} 
-              r={2} 
-              fill="#003366" 
+            <circle
+              cx={points[hoveredIndex].x}
+              cy={points[hoveredIndex].y}
+              r={2}
+              fill="#003366"
             />
           </g>
         )}
@@ -205,11 +205,11 @@ const PremiumLineChart = ({ data, timeFilter }) => {
 
       {/* Elegant floating tooltip */}
       {hoveredIndex !== null && points[hoveredIndex] && (
-        <div 
+        <div
           className="absolute bg-primary text-white text-[11px] rounded-xl shadow-xl px-3 py-2.5 border border-white/10 pointer-events-none z-10 transition-all duration-150 flex flex-col gap-1 min-w-[130px]"
-          style={{ 
-            left: `${Math.min(svgWidth - 145, Math.max(10, points[hoveredIndex].x - 65))}px`, 
-            top: `${Math.max(5, points[hoveredIndex].y - 80)}px` 
+          style={{
+            left: `${Math.min(svgWidth - 145, Math.max(10, points[hoveredIndex].x - 65))}px`,
+            top: `${Math.max(5, points[hoveredIndex].y - 80)}px`
           }}
         >
           <span className="font-semibold text-blue-100 uppercase tracking-wider text-[9px]">
@@ -267,9 +267,9 @@ const Dashboard = () => {
           const count = appealsData.filter(a => a.operatorId === user.id).length;
           return {
             id: user.id,
-            name: user.username === 'admin' ? 'Azizov B.' : 
-                  user.username === 'operator' ? 'Rahmonov A.' : 
-                  user.username === 'shaxriyor' ? 'Karimov Sh.' : 'Alisherova M.',
+            name: user.username === 'admin' ? 'Azizov B.' :
+              user.username === 'operator' ? 'Rahmonov A.' :
+                user.username === 'shaxriyor' ? 'Karimov Sh.' : 'Alisherova M.',
             role: user.role === 'Admin' ? 'Bosh administrator' : 'Operator',
             appealsCount: count,
             status: user.status
@@ -301,14 +301,14 @@ const Dashboard = () => {
       const monthNamesUz = ['Yan', 'Fev', 'Mar', 'Apr', 'May', 'Iyun', 'Iyul', 'Avg', 'Sen', 'Okt', 'Noy', 'Dek'];
       const currentYear = new Date().getFullYear(); // 2026
       const baseCounts = [8, 14, 9, 23, 11, 16, 12, 18, 15, 21, 17, 24];
-      
+
       return monthNamesUz.map((month, index) => {
         const actualCount = appeals.filter(appeal => {
           if (!appeal.date) return false;
           const d = new Date(appeal.date);
           return d.getFullYear() === currentYear && d.getMonth() === index;
         }).length;
-        
+
         return {
           label: month,
           count: baseCounts[index] + actualCount,
@@ -321,21 +321,21 @@ const Dashboard = () => {
       const currentYear = now.getFullYear(); // 2026
       const currentMonth = now.getMonth(); // 5 (June)
       const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate(); // 30
-      
+
       const baseDailyCounts = [
-        2, 4, 3, 5, 2, 6, 4, 3, 5, 7, 
-        4, 2, 5, 8, 3, 4, 6, 2, 4, 5, 
+        2, 4, 3, 5, 2, 6, 4, 3, 5, 7,
+        4, 2, 5, 8, 3, 4, 6, 2, 4, 5,
         7, 3, 1, 4, 5, 8, 3, 6, 4, 2, 5
       ];
-      
+
       const result = [];
       for (let day = 1; day <= daysInMonth; day++) {
         const dayStr = String(day).padStart(2, '0');
         const monthStr = String(currentMonth + 1).padStart(2, '0');
         const dateStr = `${currentYear}-${monthStr}-${dayStr}`;
-        
+
         const actualCount = appeals.filter(appeal => appeal.date === dateStr).length;
-        
+
         result.push({
           label: `${day}`,
           count: (baseDailyCounts[(day - 1) % baseDailyCounts.length]) + actualCount,
@@ -361,14 +361,6 @@ const Dashboard = () => {
 
   return (
     <div className="space-y-stack-lg animate-slide-up">
-      {/* Welcome Header */}
-      <div>
-        <h2 className="font-display-md text-display-md text-primary font-bold">Xush kelibsiz, {userDisplayName}</h2>
-        <p className="text-on-surface-variant mt-1 text-body-lg">Tizimdagi so'nggi holatlar va ko'rsatkichlar bilan tanishing.</p>
-      </div>
-
-
-
       {/* Main Charts & Activity Row */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
         {/* Dynamic line chart of appeals */}
@@ -380,32 +372,30 @@ const Dashboard = () => {
                 {timeFilter === 'yillik' ? `Yillik tahlil (joriy yil oylar kesimida)` : `Oylik tahlil (Iyun 2026 kunlar kesimida)`}
               </p>
             </div>
-            
+
             {/* Toggle Buttons */}
             <div className="flex bg-surface-container-low rounded-lg p-1 border border-outline-variant/30 select-none self-start sm:self-auto">
-              <button 
+              <button
                 onClick={() => setTimeFilter('yillik')}
-                className={`px-4 py-1.5 text-xs font-semibold rounded-md transition-all duration-200 ${
-                  timeFilter === 'yillik' 
-                    ? 'bg-primary text-white shadow-sm' 
+                className={`px-4 py-1.5 text-xs font-semibold rounded-md transition-all duration-200 ${timeFilter === 'yillik'
+                    ? 'bg-primary text-white shadow-sm'
                     : 'text-on-surface-variant hover:text-primary'
-                }`}
+                  }`}
               >
                 Yillik
               </button>
-              <button 
+              <button
                 onClick={() => setTimeFilter('oylik')}
-                className={`px-4 py-1.5 text-xs font-semibold rounded-md transition-all duration-200 ${
-                  timeFilter === 'oylik' 
-                    ? 'bg-primary text-white shadow-sm' 
+                className={`px-4 py-1.5 text-xs font-semibold rounded-md transition-all duration-200 ${timeFilter === 'oylik'
+                    ? 'bg-primary text-white shadow-sm'
                     : 'text-on-surface-variant hover:text-primary'
-                }`}
+                  }`}
               >
                 Oylik
               </button>
             </div>
           </div>
-          
+
           {/* Custom SVG Line Chart */}
           <div className="pt-2">
             <PremiumLineChart data={chartData} timeFilter={timeFilter} />
@@ -420,14 +410,14 @@ const Dashboard = () => {
           <div>
             <div className="p-6 border-b border-outline-variant flex justify-between items-center bg-surface-container-lowest">
               <h3 className="font-bold text-primary">So'nggi murojaatlar</h3>
-              <button 
+              <button
                 onClick={() => navigate('/appeals')}
                 className="flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline group"
               >
                 Barchasi <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
               </button>
             </div>
-            
+
             <div className="divide-y divide-outline-variant/30 overflow-x-auto">
               <table className="w-full text-left min-w-[400px]">
                 <thead className="bg-surface-container-low/50 text-[11px] uppercase text-on-surface-variant font-bold">
@@ -448,13 +438,12 @@ const Dashboard = () => {
                       <td className="px-6 py-4 text-sm text-on-surface-variant font-medium">{appeal.subject}</td>
                       <td className="px-6 py-4 text-xs text-outline">{appeal.date}</td>
                       <td className="px-6 py-4">
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase select-none ${
-                          appeal.status === 'Kritik' 
-                            ? 'bg-error-container text-error' 
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase select-none ${appeal.status === 'Kritik'
+                            ? 'bg-error-container text-error'
                             : appeal.status === 'Yangi'
-                            ? 'bg-primary-fixed text-primary font-semibold'
-                            : 'bg-secondary-container text-on-secondary-container'
-                        }`}>
+                              ? 'bg-primary-fixed text-primary font-semibold'
+                              : 'bg-secondary-container text-on-secondary-container'
+                          }`}>
                           {appeal.status}
                         </span>
                       </td>
@@ -486,7 +475,7 @@ const Dashboard = () => {
                 </button>
               </div>
             </div>
-            
+
             <div className="divide-y divide-outline-variant/30 overflow-x-auto">
               <table className="w-full text-left min-w-[400px]">
                 <thead className="bg-surface-container-low/50 text-[11px] uppercase text-on-surface-variant font-bold">
@@ -514,9 +503,8 @@ const Dashboard = () => {
                       <td className="px-6 py-4 text-xs font-semibold text-on-surface-variant">{staff.role}</td>
                       <td className="px-6 py-4 text-sm text-center font-bold text-primary">{staff.appealsCount} ta</td>
                       <td className="px-6 py-4">
-                        <span className={`inline-flex items-center gap-1 text-[11px] font-semibold ${
-                          staff.status === 'Faol' ? 'text-emerald-600' : 'text-outline-variant'
-                        }`}>
+                        <span className={`inline-flex items-center gap-1 text-[11px] font-semibold ${staff.status === 'Faol' ? 'text-emerald-600' : 'text-outline-variant'
+                          }`}>
                           <span className={`w-2 h-2 rounded-full ${staff.status === 'Faol' ? 'bg-emerald-600' : 'bg-outline-variant'}`}></span>
                           {staff.status}
                         </span>

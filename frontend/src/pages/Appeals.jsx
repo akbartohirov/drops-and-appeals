@@ -244,7 +244,6 @@ const Appeals = () => {
       <div className="flex justify-between items-end flex-wrap gap-4">
         <div>
           <h1 className="font-display-lg text-display-lg font-bold text-primary">Murojaatlar reyestri</h1>
-          <p className="text-on-surface-variant text-body-lg">Bank mijozlaridan kelib tushgan arizalar markaziy jadvali</p>
         </div>
         <div className="flex gap-3">
           <ExcelExport
@@ -506,7 +505,7 @@ const Appeals = () => {
                 Ko'rsatilmoqda: {((currentPage - 1) * pageSize) + 1}-
                 {Math.min(currentPage * pageSize, totalItems)} dan {totalItems} ta murojaat
               </span>
-              
+
               <div className="flex items-center gap-1.5">
                 <span className="text-[11px] font-medium text-outline">Sahifada:</span>
                 <select
@@ -553,11 +552,10 @@ const Appeals = () => {
                     <button
                       key={1}
                       onClick={() => handlePageChange(1)}
-                      className={`w-8 h-8 rounded-lg text-xs font-bold transition-all duration-200 active:scale-95 ${
-                        currentPage === 1
+                      className={`w-8 h-8 rounded-lg text-xs font-bold transition-all duration-200 active:scale-95 ${currentPage === 1
                           ? 'bg-primary text-white shadow-sm font-extrabold'
                           : 'text-on-surface-variant hover:bg-primary/5'
-                      }`}
+                        }`}
                     >
                       1
                     </button>
@@ -572,11 +570,10 @@ const Appeals = () => {
                     <button
                       key={p}
                       onClick={() => handlePageChange(p)}
-                      className={`w-8 h-8 rounded-lg text-xs font-bold transition-all duration-200 active:scale-95 ${
-                        currentPage === p
+                      className={`w-8 h-8 rounded-lg text-xs font-bold transition-all duration-200 active:scale-95 ${currentPage === p
                           ? 'bg-primary text-white shadow-sm font-extrabold'
                           : 'text-on-surface-variant hover:bg-primary/5'
-                      }`}
+                        }`}
                     >
                       {p}
                     </button>
@@ -591,11 +588,10 @@ const Appeals = () => {
                     <button
                       key={totalPages}
                       onClick={() => handlePageChange(totalPages)}
-                      className={`w-8 h-8 rounded-lg text-xs font-bold transition-all duration-200 active:scale-95 ${
-                        currentPage === totalPages
+                      className={`w-8 h-8 rounded-lg text-xs font-bold transition-all duration-200 active:scale-95 ${currentPage === totalPages
                           ? 'bg-primary text-white shadow-sm font-extrabold'
                           : 'text-on-surface-variant hover:bg-primary/5'
-                      }`}
+                        }`}
                     >
                       {totalPages}
                     </button>

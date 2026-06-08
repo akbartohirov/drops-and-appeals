@@ -185,7 +185,6 @@ const DropCards = () => {
       <div className="flex justify-between items-end flex-wrap gap-4">
         <div>
           <h1 className="font-display-lg text-display-lg font-bold text-primary">Drop kartalar reyestri</h1>
-          <p className="text-on-surface-variant text-body-lg">Bloklangan va shubhali bank kartalarining markaziy ma'lumotlar bazasi</p>
         </div>
         <div className="flex gap-3">
           <ExcelExport
@@ -410,7 +409,7 @@ const DropCards = () => {
                 Ko'rsatilmoqda: {((currentPage - 1) * pageSize) + 1}-
                 {Math.min(currentPage * pageSize, totalItems)} dan {totalItems} ta karta
               </span>
-              
+
               <div className="flex items-center gap-1.5">
                 <span className="text-[11px] font-medium text-outline">Sahifada:</span>
                 <select
@@ -457,11 +456,10 @@ const DropCards = () => {
                     <button
                       key={1}
                       onClick={() => handlePageChange(1)}
-                      className={`w-8 h-8 rounded-lg text-xs font-bold transition-all duration-200 active:scale-95 ${
-                        currentPage === 1
+                      className={`w-8 h-8 rounded-lg text-xs font-bold transition-all duration-200 active:scale-95 ${currentPage === 1
                           ? 'bg-primary text-white shadow-sm font-extrabold'
                           : 'text-on-surface-variant hover:bg-primary/5'
-                      }`}
+                        }`}
                     >
                       1
                     </button>
@@ -476,11 +474,10 @@ const DropCards = () => {
                     <button
                       key={p}
                       onClick={() => handlePageChange(p)}
-                      className={`w-8 h-8 rounded-lg text-xs font-bold transition-all duration-200 active:scale-95 ${
-                        currentPage === p
+                      className={`w-8 h-8 rounded-lg text-xs font-bold transition-all duration-200 active:scale-95 ${currentPage === p
                           ? 'bg-primary text-white shadow-sm font-extrabold'
                           : 'text-on-surface-variant hover:bg-primary/5'
-                      }`}
+                        }`}
                     >
                       {p}
                     </button>
@@ -495,11 +492,10 @@ const DropCards = () => {
                     <button
                       key={totalPages}
                       onClick={() => handlePageChange(totalPages)}
-                      className={`w-8 h-8 rounded-lg text-xs font-bold transition-all duration-200 active:scale-95 ${
-                        currentPage === totalPages
+                      className={`w-8 h-8 rounded-lg text-xs font-bold transition-all duration-200 active:scale-95 ${currentPage === totalPages
                           ? 'bg-primary text-white shadow-sm font-extrabold'
                           : 'text-on-surface-variant hover:bg-primary/5'
-                      }`}
+                        }`}
                     >
                       {totalPages}
                     </button>

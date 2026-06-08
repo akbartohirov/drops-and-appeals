@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { apiService } from '../services/api';
 import Modal from '../components/Modal';
-import { 
-  Users, 
-  UserCheck, 
-  Trash2, 
-  Edit3, 
-  Plus, 
-  CheckCircle, 
+import {
+  Users,
+  UserCheck,
+  Trash2,
+  Edit3,
+  Plus,
+  CheckCircle,
   AlertTriangle,
   User,
   Lock
@@ -18,7 +18,7 @@ const AdminPanel = () => {
   const [users, setUsers] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
-  
+
   // Form States
   const [formUsername, setFormUsername] = useState('');
   const [formRole, setFormRole] = useState('User');
@@ -110,7 +110,6 @@ const AdminPanel = () => {
       <div className="flex justify-between items-end flex-wrap gap-4">
         <div>
           <h1 className="font-display-lg text-display-lg font-bold text-primary">Admin paneli</h1>
-          <p className="text-on-surface-variant text-body-lg">Tizim operatorlari xavfsizlik sozlamalari va hisoblarini boshqarish</p>
         </div>
         <button
           onClick={() => setIsAddModalOpen(true)}
@@ -192,11 +191,10 @@ const AdminPanel = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-3 py-0.5 rounded-full text-[10px] font-bold uppercase select-none ${
-                        u.role === 'Admin' 
-                          ? 'bg-tertiary-fixed text-on-tertiary-fixed-variant' 
+                      <span className={`px-3 py-0.5 rounded-full text-[10px] font-bold uppercase select-none ${u.role === 'Admin'
+                          ? 'bg-tertiary-fixed text-on-tertiary-fixed-variant'
                           : 'bg-secondary-container text-on-secondary-container'
-                      }`}>
+                        }`}>
                         {u.role}
                       </span>
                     </td>
@@ -204,11 +202,10 @@ const AdminPanel = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <button
                         onClick={() => handleToggleStatus(u.id)}
-                        className={`inline-flex items-center gap-1.5 px-3 py-1 border rounded-full text-[11px] font-semibold transition-all hover:bg-surface-container active:scale-95 ${
-                          u.status === 'Faol' 
-                            ? 'text-emerald-700 border-emerald-300 bg-emerald-50' 
+                        className={`inline-flex items-center gap-1.5 px-3 py-1 border rounded-full text-[11px] font-semibold transition-all hover:bg-surface-container active:scale-95 ${u.status === 'Faol'
+                            ? 'text-emerald-700 border-emerald-300 bg-emerald-50'
                             : 'text-outline border-outline-variant bg-surface'
-                        }`}
+                          }`}
                         title="Foydalanuvchi holatini o'zgartirish"
                       >
                         <span className={`w-1.5 h-1.5 rounded-full ${u.status === 'Faol' ? 'bg-emerald-600' : 'bg-outline-variant'}`}></span>

@@ -34,7 +34,7 @@ const FraudRegistry = () => {
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
-  
+
   const [selectedFraud, setSelectedFraud] = useState(null);
   const [editingFraud, setEditingFraud] = useState(null);
 
@@ -46,7 +46,7 @@ const FraudRegistry = () => {
   const [formDamage, setFormDamage] = useState('');
   const [formMeasures, setFormMeasures] = useState('');
   const [formComments, setFormComments] = useState('');
-  
+
   // File attachments state for Create/Edit
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [existingAttachments, setExistingAttachments] = useState([]);
@@ -187,7 +187,7 @@ const FraudRegistry = () => {
     setExistingAttachments(fraud.attachments || []);
     setDeletedFileIds([]);
     setSelectedFiles([]);
-    
+
     // Close detail modal if open
     setIsDetailModalOpen(false);
     setIsEditModalOpen(true);
@@ -212,7 +212,7 @@ const FraudRegistry = () => {
     formData.append('damage_amount', Number(formDamage) || 0);
     formData.append('measures_taken', formMeasures);
     formData.append('comments', formComments);
-    
+
     // Send list of attachment IDs to delete
     formData.append('deleted_file_ids', JSON.stringify(deletedFileIds));
 
@@ -227,7 +227,7 @@ const FraudRegistry = () => {
       setEditingFraud(null);
       setSelectedFiles([]);
       setDeletedFileIds([]);
-      
+
       setIsSuccessModalOpen(true);
       await fetchFrauds();
     } catch (err) {
@@ -277,7 +277,6 @@ const FraudRegistry = () => {
       <div className="flex justify-between items-end flex-wrap gap-4">
         <div>
           <h1 className="font-display-lg text-display-lg font-bold text-primary">Fraud reyestri</h1>
-          <p className="text-on-surface-variant text-body-lg">Bank tizimidagi firibgarlik holatlari va gumonlanuvchilar markaziy ro'yxati</p>
         </div>
         <div className="flex gap-3">
           <ExcelExport
