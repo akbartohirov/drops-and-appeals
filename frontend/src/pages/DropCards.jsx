@@ -164,19 +164,13 @@ const DropCards = () => {
 
   // Excel headers
   const excelHeaders = [
-    { label: 'Karta raqami', key: 'cardNumber', format: (val) => formatCardSpaced(val) },
-    { label: 'Karta turi', key: 'cardNumber', format: (val) => getCardTypeInfo(val).name },
-    { label: 'Foydalanuvchi F.I.O', key: 'holderName' },
-    { label: 'Bloklangan sana', key: 'blockDate' },
-    { label: 'Bloklangan vaqt', key: 'blockTime' },
-    { label: 'Qoldiq summasi', key: 'balance', format: (val) => Number(val).toLocaleString('uz-UZ') + ' UZS' },
-    {
-      label: 'Sababi', key: 'reason', format: (val) =>
-        val === 'shubhali' ? 'Shubhali tranzaksiya' :
-          val === 'kredit' ? 'Kredit firibgarligi' :
-            val === 'huquq' ? 'Huquqni muhofaza qilish organi so\'rovi' : 'Boshqa'
-    },
-    { label: 'Izoh', key: 'comment' }
+    { label: "Karta raqami", key: "cardNumber" },
+    { label: "Bloklangan sana", key: "blockedAt" },
+    { label: "Qoldiq summasi (UZS)", key: "balance" },
+    { label: "Izoh / Bloklash sababi", key: "comment" },
+    { label: "Bloklagan shaxs", key: "creatorName" },
+    { label: "Yaratilgan vaqt", key: "createdAt" },
+    { label: "O'zgartirilgan vaqt", key: "updatedAt" }
   ];
 
   return (
