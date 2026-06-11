@@ -54,7 +54,6 @@ db.exec(`
     appeal_date TEXT,
     damage_amount INTEGER DEFAULT 0,
     comment TEXT,
-    status TEXT DEFAULT "Yangi",
     created_by INTEGER,
     updated_by INTEGER,
     created_at TEXT DEFAULT (datetime('now')),
@@ -121,12 +120,12 @@ if (userCount.count === 0) {
 
   // Seed Appeals
   const insertAppeal = db.prepare(`
-    INSERT INTO appeals (id, applicant_name, phone, address, source_org, source_system, subject, direction, client_code, card, appeal_date, damage_amount, comment, status, created_by)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO appeals (id, applicant_name, phone, address, source_org, source_system, subject, direction, client_code, card, appeal_date, damage_amount, comment, created_by)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
-  insertAppeal.run(1, "Abdullayev Anvar", "998901234567", "Toshkent sh., Yunusobod 14-4", "ATB \"Hamkorbank\"", "MOBILE", "To'lov xatoligi", "Transaksiyalar", "CLI-90821", "8600123456784421", "2026-05-24", 1250000, "Pul yechildi, lekin tushmadi...", "Yangi", 1);
-  insertAppeal.run(2, "Sattorova Madina", "998934567890", "Samarqand sh., Registon k. 12", "MB Bosh ofisi", "WEB", "Kredit so'rovi", "Kreditlash", "CLI-45123", "9860054321001009", "2026-05-23", 0, "Kredit liniyasi ochilmadi", "Jarayonda", 1);
-  insertAppeal.run(3, "\"Global Logistics\" MCHJ", "998999990011", "Buxoro sh., S.Ayniy 45", "Xalq Banki", "ATM", "Naqdlashtirish xatosi", "Inkasatsiya", "CORP-001", "5614332211228877", "2026-05-22", 4000000, "ATM pulni bermadi, balansdan ayirildi", "Kritik", 1);
+  insertAppeal.run(1, "Abdullayev Anvar", "998901234567", "Toshkent sh., Yunusobod 14-4", "ATB \"Hamkorbank\"", "MOBILE", "To'lov xatoligi", "Transaksiyalar", "CLI-90821", "8600123456784421", "2026-05-24", 1250000, "Pul yechildi, lekin tushmadi...", 1);
+  insertAppeal.run(2, "Sattorova Madina", "998934567890", "Samarqand sh., Registon k. 12", "MB Bosh ofisi", "WEB", "Kredit so'rovi", "Kreditlash", "CLI-45123", "9860054321001009", "2026-05-23", 0, "Kredit liniyasi ochilmadi", 1);
+  insertAppeal.run(3, "\"Global Logistics\" MCHJ", "998999990011", "Buxoro sh., S.Ayniy 45", "Xalq Banki", "ATM", "Naqdlashtirish xatosi", "Inkasatsiya", "CORP-001", "5614332211228877", "2026-05-22", 4000000, "ATM pulni bermadi, balansdan ayirildi", 1);
 
   // Seed Drop Cards
   const insertDropCard = db.prepare(`

@@ -97,7 +97,7 @@ exports.getAppeals = async (req, res) => {
 };
 
 exports.createAppeal = async (req, res) => {
-  const { applicant_name, phone, address, source_org, source_system, subject, direction, client_code, card, appeal_date, damage_amount, comment, status } = req.body;
+  const { applicant_name, phone, address, source_org, source_system, subject, direction, client_code, card, appeal_date, damage_amount, comment } = req.body;
   const operatorId = req.user.id;
 
   if (!applicant_name || !phone) {
@@ -109,8 +109,8 @@ exports.createAppeal = async (req, res) => {
 
   try {
     const stmt = db.prepare(`
-      INSERT INTO appeals (applicant_name, phone, address, source_org, source_system, subject, direction, client_code, card, appeal_date, damage_amount, comment, status, created_by)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO appeals (applicant_name, phone, address, source_org, source_system, subject, direction, client_code, card, appeal_date, damage_amount, comment, created_by)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
     
     const info = stmt.run(
@@ -126,7 +126,6 @@ exports.createAppeal = async (req, res) => {
       appeal_date || new Date().toISOString().split("T")[0],
       Number(damage_amount) || 0,
       comment || null,
-      status || "Yangi",
       operatorId
     );
 

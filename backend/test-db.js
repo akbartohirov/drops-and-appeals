@@ -20,10 +20,10 @@ try {
 
   // 2. Verify Appeals Table
   console.log("\n[2/3] Testing appeals table...");
-  const appeals = db.prepare("SELECT id, applicant_name, subject, status, damage_amount FROM appeals").all();
+  const appeals = db.prepare("SELECT id, applicant_name, subject, damage_amount FROM appeals").all();
   console.log(`Successfully fetched ${appeals.length} appeals:`);
   appeals.forEach(a => {
-    console.log(`  - Appeal ID: ${a.id}, Client: ${a.applicant_name}, Subject: ${a.subject}, Status: ${a.status}, Loss: ${a.damage_amount} UZS`);
+    console.log(`  - Appeal ID: ${a.id}, Client: ${a.applicant_name}, Subject: ${a.subject}, Loss: ${a.damage_amount} UZS`);
   });
 
   // 3. Verify Drop Cards Table
