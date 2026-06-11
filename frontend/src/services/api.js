@@ -35,7 +35,6 @@ export const mapAppealFromApi = (apiData) => ({
   date: apiData.appeal_date || "",
   lossAmount: Number(apiData.damage_amount) || 0,
   comment: apiData.comment || "",
-  status: apiData.status || "Yangi",
   operatorId: apiData.created_by || "",
   creatorName: apiData.creator_name || "",
   updaterName: apiData.updater_name || "",
@@ -57,7 +56,6 @@ export const mapAppealToApi = (formData) => {
     appeal_date: formData.date || new Date().toISOString().split("T")[0],
     damage_amount: Number(formData.lossAmount) || 0,
     comment: String(formData.comment || "").trim(),
-    status: String(formData.status || "Yangi"),
     created_by: formData.operatorId || null
   };
 };

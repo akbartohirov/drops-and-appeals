@@ -234,7 +234,6 @@ const Appeals = () => {
     { label: 'Tashkilot', key: 'organization' },
     { label: 'Predmet', key: 'subject' },
     { label: 'Zarar summasi', key: 'lossAmount', format: (val) => Number(val).toLocaleString('uz-UZ') + ' UZS' },
-    { label: 'Status', key: 'status' },
     { label: 'Izoh', key: 'comment' }
   ];
 

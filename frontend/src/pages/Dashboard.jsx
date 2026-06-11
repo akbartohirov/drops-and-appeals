@@ -426,7 +426,6 @@ const Dashboard = () => {
                     <th className="px-6 py-3.5">Mijoz</th>
                     <th className="px-6 py-3.5">Murojaat turi</th>
                     <th className="px-6 py-3.5">Sana</th>
-                    <th className="px-6 py-3.5">Status</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-outline-variant/30 font-body-md">
@@ -438,16 +437,6 @@ const Dashboard = () => {
                       </td>
                       <td className="px-6 py-4 text-sm text-on-surface-variant font-medium">{appeal.subject}</td>
                       <td className="px-6 py-4 text-xs text-outline">{formatDate(appeal.date)}</td>
-                      <td className="px-6 py-4">
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase select-none ${appeal.status === 'Kritik'
-                            ? 'bg-error-container text-error'
-                            : appeal.status === 'Yangi'
-                              ? 'bg-primary-fixed text-primary font-semibold'
-                              : 'bg-secondary-container text-on-secondary-container'
-                          }`}>
-                          {appeal.status}
-                        </span>
-                      </td>
                     </tr>
                   ))}
                 </tbody>
