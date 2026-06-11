@@ -72,8 +72,6 @@ export const mapDropCardFromApi = (apiData) => {
     blockDate: blockDate,
     blockTime: blockTime,
     balance: Number(apiData.balance) || 0,
-    holderName: "Mijoz",
-    reason: "boshqa",
     comment: apiData.comment || "",
     operatorId: apiData.blocked_by || "",
     creatorName: apiData.creator_name || "",

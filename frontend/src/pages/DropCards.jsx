@@ -457,8 +457,8 @@ const DropCards = () => {
                       key={1}
                       onClick={() => handlePageChange(1)}
                       className={`w-8 h-8 rounded-lg text-xs font-bold transition-all duration-200 active:scale-95 ${currentPage === 1
-                          ? 'bg-primary text-white shadow-sm font-extrabold'
-                          : 'text-on-surface-variant hover:bg-primary/5'
+                        ? 'bg-primary text-white shadow-sm font-extrabold'
+                        : 'text-on-surface-variant hover:bg-primary/5'
                         }`}
                     >
                       1
@@ -475,8 +475,8 @@ const DropCards = () => {
                       key={p}
                       onClick={() => handlePageChange(p)}
                       className={`w-8 h-8 rounded-lg text-xs font-bold transition-all duration-200 active:scale-95 ${currentPage === p
-                          ? 'bg-primary text-white shadow-sm font-extrabold'
-                          : 'text-on-surface-variant hover:bg-primary/5'
+                        ? 'bg-primary text-white shadow-sm font-extrabold'
+                        : 'text-on-surface-variant hover:bg-primary/5'
                         }`}
                     >
                       {p}
@@ -493,8 +493,8 @@ const DropCards = () => {
                       key={totalPages}
                       onClick={() => handlePageChange(totalPages)}
                       className={`w-8 h-8 rounded-lg text-xs font-bold transition-all duration-200 active:scale-95 ${currentPage === totalPages
-                          ? 'bg-primary text-white shadow-sm font-extrabold'
-                          : 'text-on-surface-variant hover:bg-primary/5'
+                        ? 'bg-primary text-white shadow-sm font-extrabold'
+                        : 'text-on-surface-variant hover:bg-primary/5'
                         }`}
                     >
                       {totalPages}
@@ -614,29 +614,9 @@ const DropCards = () => {
         {selectedCard && (
           <div className="space-y-6 text-on-surface font-body-md">
             {/* Card representation visually matches a premium bank card */}
-            <div className={`p-6 ${getCardTypeInfo(selectedCard.cardNumber).color} rounded-2xl border border-outline-variant/30 flex flex-col justify-between h-44 shadow-md select-none`}>
-              <div className="flex justify-between items-start">
-                <span className="font-bold text-xs uppercase tracking-widest opacity-80">
-                  {getCardTypeInfo(selectedCard.cardNumber).name} Platinum
-                </span>
-                <span className="font-medium text-[9px] uppercase tracking-wider bg-white/20 px-2 py-0.5 rounded">
-                  Restricted
-                </span>
-              </div>
-
-              <div className="font-mono text-xl font-bold tracking-widest text-center my-2 text-white">
+            <div className={`p-6 ${getCardTypeInfo(selectedCard.cardNumber).color} rounded-2xl border border-outline-variant/30 flex items-center justify-center h-32 shadow-md select-none`}>
+              <div className="font-mono text-xl font-bold tracking-widest text-center text-white">
                 {formatCardSpaced(selectedCard.cardNumber)}
-              </div>
-
-              <div className="flex justify-between items-end">
-                <div>
-                  <p className="text-[8px] uppercase opacity-70 leading-none mb-1">Holder Name</p>
-                  <p className="font-semibold text-xs truncate max-w-[180px]">{selectedCard.holderName}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-[8px] uppercase opacity-70 leading-none mb-1">Block Date</p>
-                  <p className="font-semibold font-mono text-xs">{formatDate(selectedCard.blockDate)}</p>
-                </div>
               </div>
             </div>
 
@@ -708,7 +688,7 @@ const DropCards = () => {
           <div className="w-16 h-16 bg-error-container text-error rounded-full flex items-center justify-center mx-auto mb-5">
             <CheckCircle className="w-10 h-10 text-emerald-600 animate-bounce" />
           </div>
-          <h3 className="text-headline-sm text-center mb-2 font-bold text-primary">Bloklandi!</h3>
+          <h3 className="text-headline-sm text-center mb-2 font-bold text-primary">Kiritildi!</h3>
           <p className="text-body-md text-on-surface-variant text-center mb-8 px-4 font-medium">
             Karta drop kartalar reyestriga muvaffaqiyatli kiritildi va tizimdagi barcha tranzaksiyalar to'xtatildi.
           </p>
