@@ -5,5 +5,7 @@ const { verifyToken } = require("../middleware/auth");
 
 router.get("/", verifyToken, appealController.getAppeals);
 router.post("/", verifyToken, appealController.createAppeal);
+router.put("/:id", verifyToken, appealController.updateAppeal);
 
 module.exports = router;
+

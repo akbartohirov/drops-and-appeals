@@ -8,6 +8,7 @@ import {
   Plus,
   Calendar,
   Eye,
+  Pencil,
   CheckCircle,
   FileText,
   MapPin,
@@ -52,6 +53,8 @@ const Appeals = () => {
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [selectedAppeal, setSelectedAppeal] = useState(null);
+  const [editingAppeal, setEditingAppeal] = useState(null);
+  const [successMsg, setSuccessMsg] = useState({ title: 'Kiritildi!', desc: 'Yangi murojaat tizimga xavfsiz kiritildi...' });
 
   const formatUZS = (amount) => {
     return `${amount.toLocaleString('uz-UZ')} UZS`;
@@ -159,7 +162,45 @@ const Appeals = () => {
     fetchAppeals(1, pageSize);
   };
 
-  // Handle Form Submit (Create Appeal)
+  const resetForm = () => {
+    setFormName('');
+    setFormPhone('');
+    setFormAddress('');
+    setFormOrg('MB');
+    setFormSystem('Mobile');
+    setFormDirection('Karta');
+    setFormCode('');
+    setFormCard('');
+    setFormDate(new Date().toISOString().split('T')[0]);
+    setFormLoss('');
+    setFormSubject('');
+    setFormComment('');
+    setEditingAppeal(null);
+  };
+
+  const handleEditClick = (appeal) => {
+    setEditingAppeal(appeal);
+    setFormName(appeal.clientName || '');
+    
+    let phoneVal = appeal.phone || '';
+    if (phoneVal.startsWith('998') && phoneVal.length === 12) {
+      phoneVal = phoneVal.slice(3);
+    }
+    setFormPhone(formatPhoneMask(phoneVal));
+    setFormAddress(appeal.address || '');
+    setFormOrg(appeal.organization || 'MB');
+    setFormSystem(appeal.system || 'Mobile');
+    setFormDirection(appeal.direction || 'Karta');
+    setFormCode(appeal.clientCode || '');
+    setFormCard(appeal.cardNumber || '');
+    setFormDate(appeal.date || new Date().toISOString().split('T')[0]);
+    setFormLoss(appeal.lossAmount || '');
+    setFormSubject(appeal.subject || '');
+    setFormComment(appeal.comment || '');
+    setIsAddModalOpen(true);
+  };
+
+  // Handle Form Submit (Create or Update Appeal)
   const handleSubmit = async (e) => {
     e.preventDefault();
     const activeUser = JSON.parse(localStorage.getItem('active_user') || '{}');
@@ -170,16 +211,16 @@ const Appeals = () => {
       rawPhone = '998' + rawPhone;
     }
 
-    const newAppeal = {
+    const appealData = {
       clientName: formName,
       phone: rawPhone,
       address: formAddress,
       organization: formOrg,
-      system: formSystem.toUpperCase(),
+      system: formSystem,
       subject: formSubject,
       direction: formDirection,
       clientCode: formCode || `CLI-${Math.floor(10000 + Math.random() * 90000)}`,
-      cardNumber: "", // Card number input is removed per customer request
+      cardNumber: formCard.replace(/\s/g, ''),
       date: formDate,
       lossAmount: Number(formLoss) || 0,
       comment: formComment,
@@ -187,29 +228,32 @@ const Appeals = () => {
     };
 
     try {
-      await apiService.createAppeal(newAppeal);
+      if (editingAppeal) {
+        // Keep original card number if editing and not provided
+        appealData.cardNumber = formCard.replace(/\s/g, '') || editingAppeal.cardNumber || "";
+        await apiService.updateAppeal(editingAppeal.id, appealData);
+        setSuccessMsg({
+          title: "O'zgartirildi!",
+          desc: "Murojaat ma'lumotlari muvaffaqiyatli o'zgartirildi va tahlil hisobotlariga qo'shildi."
+        });
+      } else {
+        appealData.cardNumber = "";
+        await apiService.createAppeal(appealData);
+        setSuccessMsg({
+          title: "Kiritildi!",
+          desc: "Yangi murojaat tizimga xavfsiz kiritildi va tahlil hisobotlariga avtomatik ravishda qo'shildi."
+        });
+      }
       setIsAddModalOpen(false);
 
       // Reset form fields
-      setFormName('');
-      setFormPhone('');
-      setFormAddress('');
-      setFormOrg('MB');
-      setFormSystem('Mobile');
-      setFormDirection('Karta');
-      setFormCode('');
-      setFormCard('');
-      setFormDate(new Date().toISOString().split('T')[0]);
-      setFormLoss('');
-      setFormSubject('');
-      setFormComment('');
+      resetForm();
 
       // Show success modal overlay
       setIsSuccessModalOpen(true);
 
       // Reload appeals database
-      setCurrentPage(1);
-      await fetchAppeals(1, pageSize);
+      await fetchAppeals(currentPage, pageSize);
 
     } catch (err) {
       alert("Murojaatni saqlashda xatolik: " + err.message);
@@ -225,16 +269,20 @@ const Appeals = () => {
   // Header definition for Excel Export matching the schema
   const excelHeaders = [
     { label: 'Murojaatchi F.I.O', key: 'clientName' },
-    { label: 'Mijoz Kodi', key: 'clientCode' },
+    { label: 'Manzil', key: 'address' },
     { label: 'Telefon', key: 'phone', format: (val) => `+${val}` },
-    { label: 'Karta raqami', key: 'cardNumber', format: (val) => formatCardSpaced(val) },
-    { label: 'Sana', key: 'date' },
+    { label: 'Tashkilot', key: 'organization' },
     { label: 'Tizim', key: 'system' },
     { label: 'Yo\'nalish', key: 'direction' },
-    { label: 'Tashkilot', key: 'organization' },
+    { label: 'Mijoz kodi', key: 'clientCode' },
+    { label: 'Karta raqami', key: 'cardNumber', format: (val) => formatCardSpaced(val) },
+    { label: 'Sana', key: 'date' },
     { label: 'Predmet', key: 'subject' },
     { label: 'Zarar summasi', key: 'lossAmount', format: (val) => Number(val).toLocaleString('uz-UZ') + ' UZS' },
-    { label: 'Izoh', key: 'comment' }
+    { label: 'Izoh', key: 'comment' },
+    { label: 'Yaratuvchi', key: 'creatorName' },
+    { label: 'Yaratilgan vaqt', key: 'createdAt', format: (val) => formatDate(val) },
+    { label: 'O\'zgartirilgan vaqt', key: 'updatedAt', format: (val) => formatDate(val) }
   ];
 
   return (
@@ -248,7 +296,12 @@ const Appeals = () => {
           <ExcelExport
             data={async () => {
               const res = await apiService.getAppeals({
-                limit: 'all'
+                limit: 'all',
+                search: searchTerm,
+                startDate,
+                endDate,
+                direction: directionFilter,
+                system: systemFilter
               });
               return res.data;
             }}
@@ -256,7 +309,7 @@ const Appeals = () => {
             filename="Murojaatlar_Reyestri"
           />
           <button
-            onClick={() => setIsAddModalOpen(true)}
+            onClick={() => { resetForm(); setIsAddModalOpen(true); }}
             className="flex items-center gap-2 bg-emerald-600 text-white px-5 py-2.5 rounded-lg font-label-md text-label-md hover:bg-emerald-700 active:scale-95 transition-all shadow-sm"
           >
             <Plus className="w-5 h-5" />
@@ -480,13 +533,20 @@ const Appeals = () => {
                     <td className={`px-6 py-4 font-bold whitespace-nowrap ${appeal.lossAmount > 0 ? 'text-error' : 'text-on-surface-variant'}`}>
                       {appeal.lossAmount > 0 ? appeal.lossAmount.toLocaleString('uz-UZ') + ' UZS' : '0 UZS'}
                     </td>
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-6 py-4 text-right flex justify-end gap-1.5">
                       <button
                         onClick={() => openDetail(appeal)}
                         className="text-primary hover:bg-primary/10 p-2 rounded-lg transition-all duration-200 active:scale-90"
                         title="Tafsilotlarni ko'rish"
                       >
                         <Eye className="w-5 h-5" />
+                      </button>
+                      <button
+                        onClick={() => handleEditClick(appeal)}
+                        className="text-amber-600 hover:bg-amber-50 p-2 rounded-lg transition-all duration-200 active:scale-90"
+                        title="Tahrirlash"
+                      >
+                        <Pencil className="w-5 h-5" />
                       </button>
                     </td>
                   </tr>
@@ -616,8 +676,8 @@ const Appeals = () => {
       {/* MODAL 1: YANGI MUROJAAT QO'SHISH */}
       <Modal
         isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        title="Yangi murojaat yaratish"
+        onClose={() => { setIsAddModalOpen(false); resetForm(); }}
+        title={editingAppeal ? "Murojaatni tahrirlash" : "Yangi murojaat yaratish"}
         maxWidth="max-w-2xl"
       >
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -771,7 +831,7 @@ const Appeals = () => {
           {/* Form Actions */}
           <div className="flex items-center justify-end gap-3 pt-4 border-t border-outline-variant">
             <button
-              onClick={() => setIsAddModalOpen(false)}
+              onClick={() => { setIsAddModalOpen(false); resetForm(); }}
               className="px-6 py-2.5 border border-outline-variant text-primary font-label-md rounded-lg hover:bg-surface-container transition-all active:scale-95"
               type="button"
             >
@@ -781,7 +841,7 @@ const Appeals = () => {
               className="px-8 py-2.5 bg-primary text-white font-label-md rounded-lg hover:bg-primary-container shadow-md active:scale-95 transition-all"
               type="submit"
             >
-              Saqlash
+              {editingAppeal ? "Yangilash" : "Saqlash"}
             </button>
           </div>
         </form>
@@ -901,9 +961,9 @@ const Appeals = () => {
           <div className="w-16 h-16 bg-tertiary-fixed rounded-full flex items-center justify-center mx-auto mb-5 text-on-tertiary-fixed">
             <CheckCircle className="w-10 h-10 text-emerald-600 animate-bounce" />
           </div>
-          <h3 className="text-headline-sm text-center mb-2 font-bold text-primary">Kiritildi!</h3>
-          <p className="text-body-md text-on-surface-variant text-center mb-8 px-4">
-            Yangi murojaat tizimga xavfsiz kiritildi va tahlil hisobotlariga avtomatik ravishda qo'shildi.
+          <h3 className="text-headline-sm text-center mb-2 font-bold text-primary">{successMsg.title}</h3>
+          <p className="text-body-md text-on-surface-variant text-center mb-8 px-4 font-medium">
+            {successMsg.desc}
           </p>
           <button
             onClick={() => setIsSuccessModalOpen(false)}

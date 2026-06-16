@@ -217,6 +217,23 @@ export const apiService = {
     return mapAppealFromApi(created);
   },
 
+  updateAppeal: async (id, appealData) => {
+    const cleanAppeal = mapAppealToApi(appealData);
+    const res = await fetch(`${BASE_URL}/appeals/${id}`, {
+      method: 'PUT',
+      headers: getHeaders(),
+      body: JSON.stringify(cleanAppeal)
+    });
+
+    if (!res.ok) {
+      const errData = await res.json();
+      throw new Error(errData.message || 'Murojaatni yangilashda xatolik!');
+    }
+
+    const updated = await res.json();
+    return mapAppealFromApi(updated);
+  },
+
   // 3. Drop Cards
   getDropCards: async (options = {}) => {
     const params = new URLSearchParams();
@@ -259,6 +276,23 @@ export const apiService = {
 
     const created = await res.json();
     return mapDropCardFromApi(created);
+  },
+
+  updateDropCard: async (id, cardData) => {
+    const cleanCard = mapDropCardToApi(cardData);
+    const res = await fetch(`${BASE_URL}/drop-cards/${id}`, {
+      method: 'PUT',
+      headers: getHeaders(),
+      body: JSON.stringify(cleanCard)
+    });
+
+    if (!res.ok) {
+      const errData = await res.json();
+      throw new Error(errData.message || 'Drop kartani yangilashda xatolik!');
+    }
+
+    const updated = await res.json();
+    return mapDropCardFromApi(updated);
   },
 
   // 4. Admin User Management

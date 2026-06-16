@@ -142,3 +142,56 @@ exports.createAppeal = async (req, res) => {
     res.status(500).json({ message: "Murojaatni saqlashda xatolik!" });
   }
 };
+
+exports.updateAppeal = async (req, res) => {
+  const { id } = req.params;
+  const { applicant_name, phone, address, source_org, source_system, subject, direction, client_code, card, appeal_date, damage_amount, comment } = req.body;
+  const operatorId = req.user.id;
+
+  if (!applicant_name || !phone) {
+    return res.status(400).json({ message: "Murojaatchi nomi va telefoni talab qilinadi!" });
+  }
+
+  try {
+    const stmt = db.prepare(`
+      UPDATE appeals 
+      SET applicant_name = ?, phone = ?, address = ?, source_org = ?, source_system = ?, subject = ?, direction = ?, client_code = ?, card = ?, appeal_date = ?, damage_amount = ?, comment = ?, updated_by = ?, updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `);
+    
+    const info = stmt.run(
+      applicant_name,
+      phone,
+      address || null,
+      source_org || null,
+      source_system || "MOBILE",
+      subject || null,
+      direction || null,
+      client_code || "",
+      card || "",
+      appeal_date || new Date().toISOString().split("T")[0],
+      Number(damage_amount) || 0,
+      comment || null,
+      operatorId,
+      id
+    );
+
+    if (info.changes === 0) {
+      return res.status(404).json({ message: "Murojaat topilmadi!" });
+    }
+
+    const updated = db.prepare(`
+      SELECT appeals.*, u1.username AS creator_name, u2.username AS updater_name
+      FROM appeals
+      LEFT JOIN users u1 ON appeals.created_by = u1.id
+      LEFT JOIN users u2 ON appeals.updated_by = u2.id
+      WHERE appeals.id = ?
+    `).get(id);
+
+    res.json(updated);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Murojaatni yangilashda xatolik!" });
+  }
+};
+

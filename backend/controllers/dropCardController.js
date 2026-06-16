@@ -122,3 +122,50 @@ exports.createDropCard = async (req, res) => {
     res.status(500).json({ message: "Drop kartani qo'shishda xatolik!" });
   }
 };
+
+exports.updateDropCard = async (req, res) => {
+  const { id } = req.params;
+  const { card_number, blocked_at, balance, comment } = req.body;
+  const operatorId = req.user.id;
+
+  if (!card_number) {
+    return res.status(400).json({ message: "Karta raqami talab qilinadi!" });
+  }
+
+  const cleanCardNumber = card_number.replace(/\D/g, "");
+
+  try {
+    const stmt = db.prepare(`
+      UPDATE drop_cards 
+      SET card_number = ?, blocked_at = ?, balance = ?, comment = ?, updated_by = ?, updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `);
+
+    const info = stmt.run(
+      cleanCardNumber,
+      blocked_at,
+      Number(balance) || 0,
+      comment || null,
+      operatorId,
+      id
+    );
+
+    if (info.changes === 0) {
+      return res.status(404).json({ message: "Karta topilmadi!" });
+    }
+
+    const updated = db.prepare(`
+      SELECT drop_cards.*, u1.username AS creator_name, u2.username AS updater_name
+      FROM drop_cards
+      LEFT JOIN users u1 ON drop_cards.blocked_by = u1.id
+      LEFT JOIN users u2 ON drop_cards.updated_by = u2.id
+      WHERE drop_cards.id = ?
+    `).get(id);
+
+    res.json(updated);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Drop kartani yangilashda xatolik!" });
+  }
+};
+

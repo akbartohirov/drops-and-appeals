@@ -7,6 +7,7 @@ import {
   Plus,
   Calendar,
   Eye,
+  Pencil,
   CheckCircle,
   CreditCard,
   User,
@@ -45,6 +46,8 @@ const DropCards = () => {
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
+  const [editingCard, setEditingCard] = useState(null);
+  const [successMsg, setSuccessMsg] = useState({ title: 'Kiritildi!', desc: 'Karta drop kartalar reyestriga muvaffaqiyatli kiritildi...' });
 
   // Form Fields State
   const [formCard, setFormCard] = useState('');
@@ -119,41 +122,67 @@ const DropCards = () => {
     return { name: 'Boshqa', color: 'bg-secondary text-white', label: 'Bank kartasi • Jismoniy' };
   };
 
-  // Handle Form Submit (Add Blocked Card)
+  const resetForm = () => {
+    setFormCard('');
+    setFormHolder('');
+    setFormBalance('');
+    setFormReason('');
+    setFormComment('');
+    setFormDate(new Date().toISOString().split('T')[0]);
+    setEditingCard(null);
+  };
+
+  const handleEditClick = (card) => {
+    setEditingCard(card);
+    setFormCard(formatCardSpaced(card.cardNumber || ''));
+    setFormDate(card.blockDate || new Date().toISOString().split('T')[0]);
+    setFormBalance(card.balance || '');
+    setFormComment(card.comment || '');
+    setIsAddModalOpen(true);
+  };
+
+  // Handle Form Submit (Add or Update Blocked Card)
   const handleSubmit = async (e) => {
     e.preventDefault();
     const activeUser = JSON.parse(localStorage.getItem('active_user') || '{}');
 
-    const newCard = {
+    const cardData = {
       cardNumber: formCard.replace(/\s/g, ''),
       blockDate: formDate,
-      holderName: "Noma'lum Jismoniy shaxs", // Default since field is removed per UI request
+      holderName: "Noma'lum Jismoniy shaxs",
       balance: Number(formBalance) || 0,
-      reason: "boshqa", // Default since field is removed per UI request
+      reason: "boshqa",
       comment: formComment,
       operatorId: activeUser.id || 2
     };
 
     try {
-      await apiService.createDropCard(newCard);
+      if (editingCard) {
+        cardData.blockTime = editingCard.blockTime;
+        await apiService.updateDropCard(editingCard.id, cardData);
+        setSuccessMsg({
+          title: "O'zgartirildi!",
+          desc: "Karta ma'lumotlari drop kartalar reyestrida muvaffaqiyatli o'zgartirildi."
+        });
+      } else {
+        await apiService.createDropCard(cardData);
+        setSuccessMsg({
+          title: "Kiritildi!",
+          desc: "Karta drop kartalar reyestriga muvaffaqiyatli kiritildi va tizimdagi barcha tranzaksiyalar to'xtatildi."
+        });
+      }
       setIsAddModalOpen(false);
 
       // Reset fields
-      setFormCard('');
-      setFormHolder('');
-      setFormBalance('');
-      setFormReason('');
-      setFormComment('');
-      setFormDate(new Date().toISOString().split('T')[0]);
+      resetForm();
 
       // Show success modal
       setIsSuccessModalOpen(true);
 
       // Reload database
-      setCurrentPage(1);
-      await fetchCards(1, pageSize);
+      await fetchCards(currentPage, pageSize);
     } catch (err) {
-      alert("Drop kartani qo'shishda xatolik: " + err.message);
+      alert("Drop kartani saqlashda xatolik: " + err.message);
     }
   };
 
@@ -192,7 +221,7 @@ const DropCards = () => {
             filename="Drop_Kartalar_Reyestri"
           />
           <button
-            onClick={() => setIsAddModalOpen(true)}
+            onClick={() => { resetForm(); setIsAddModalOpen(true); }}
             className="flex items-center gap-2 bg-emerald-600 text-white px-5 py-2.5 rounded-lg font-label-md text-label-md hover:bg-emerald-700 active:scale-95 transition-all shadow-sm"
           >
             <Plus className="w-5 h-5" />
@@ -378,13 +407,20 @@ const DropCards = () => {
                       <td className="px-6 py-4 text-xs text-on-surface-variant font-mono whitespace-nowrap">
                         {formatDate(card.updatedAt) || '-'}
                       </td>
-                      <td className="px-6 py-4 text-right">
+                      <td className="px-6 py-4 text-right flex justify-end gap-1.5">
                         <button
                           onClick={() => openDetail(card)}
                           className="text-primary hover:bg-primary/10 p-2 rounded-lg transition-all duration-200 active:scale-90"
                           title="Tafsilotlarni ko'rish"
                         >
                           <Eye className="w-5 h-5" />
+                        </button>
+                        <button
+                          onClick={() => handleEditClick(card)}
+                          className="text-amber-600 hover:bg-amber-50 p-2 rounded-lg transition-all duration-200 active:scale-90"
+                          title="Tahrirlash"
+                        >
+                          <Pencil className="w-5 h-5" />
                         </button>
                       </td>
                     </tr>
@@ -515,8 +551,8 @@ const DropCards = () => {
       {/* MODAL 1: YANGI DROP KARTA BLOKLASH */}
       <Modal
         isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        title="Yangi drop karta kiritish"
+        onClose={() => { setIsAddModalOpen(false); resetForm(); }}
+        title={editingCard ? "Drop kartani tahrirlash" : "Yangi drop karta kiritish"}
         maxWidth="max-w-2xl"
       >
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -582,7 +618,7 @@ const DropCards = () => {
           {/* Form Actions */}
           <div className="px-8 py-6 bg-surface-container-low border-t border-outline-variant flex justify-end gap-3 rounded-b-xl -mx-6 -mb-6">
             <button
-              onClick={() => setIsAddModalOpen(false)}
+              onClick={() => { setIsAddModalOpen(false); resetForm(); }}
               className="px-6 py-2.5 rounded-lg border border-primary text-primary font-label-md text-label-md hover:bg-primary-fixed transition-all active:scale-95"
               type="button"
             >
@@ -592,7 +628,7 @@ const DropCards = () => {
               className="px-10 py-2.5 rounded-lg bg-primary text-white font-label-md text-label-md hover:bg-primary-container shadow-sm transition-all active:scale-95 font-semibold"
               type="submit"
             >
-              Saqlash
+              {editingCard ? "Yangilash" : "Saqlash"}
             </button>
           </div>
         </form>
@@ -682,9 +718,9 @@ const DropCards = () => {
           <div className="w-16 h-16 bg-error-container text-error rounded-full flex items-center justify-center mx-auto mb-5">
             <CheckCircle className="w-10 h-10 text-emerald-600 animate-bounce" />
           </div>
-          <h3 className="text-headline-sm text-center mb-2 font-bold text-primary">Kiritildi!</h3>
+          <h3 className="text-headline-sm text-center mb-2 font-bold text-primary">{successMsg.title}</h3>
           <p className="text-body-md text-on-surface-variant text-center mb-8 px-4 font-medium">
-            Karta drop kartalar reyestriga muvaffaqiyatli kiritildi va tizimdagi barcha tranzaksiyalar to'xtatildi.
+            {successMsg.desc}
           </p>
           <button
             onClick={() => setIsSuccessModalOpen(false)}

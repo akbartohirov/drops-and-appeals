@@ -47,7 +47,7 @@ const ExcelExport = ({ data, headers, filename = 'eksport' }) => {
       }).join(',');
     });
 
-    const csvContent = [headerRow, ...dataRows].join('\n');
+    const csvContent = ['sep=,', headerRow, ...dataRows].join('\n');
 
     // 2. Prepend UTF-8 BOM so Excel opens Uzbek special chars correctly (o', g', etc.)
     const BOM = '\uFEFF';
