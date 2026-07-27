@@ -9,7 +9,6 @@ exports.getUsers = async (req, res) => {
       username: u.username,
       role: u.is_admin === 1 ? "Admin" : "User",
       createdDate: u.created_at,
-      status: "Faol"
     }));
     res.json(mappedUsers);
   } catch (err) {
@@ -21,7 +20,7 @@ exports.getUsers = async (req, res) => {
 exports.createUser = async (req, res) => {
   const { username, password, role } = req.body;
 
-  if (!username || !password || !role) {
+  if (!username || !password || role === undefined || role === null) {
     return res.status(400).json({ message: "Foydalanuvchi nomi, parol va rol talab qilinadi!" });
   }
 
