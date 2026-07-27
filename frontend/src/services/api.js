@@ -1,16 +1,16 @@
 // Decoupled API Service for Banking Admin System
 // Connects to Express API and SQLite backend using token authorization
 
-const BASE_URL = '/api';
+const BASE_URL = "/api";
 
 // Helper to assemble headers with the JWT authorization token
 const getHeaders = () => {
-  const token = localStorage.getItem('active_token');
+  const token = localStorage.getItem("active_token");
   const headers = {
-    'Content-Type': 'application/json'
+    "Content-Type": "application/json",
   };
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+    headers["Authorization"] = `Bearer ${token}`;
   }
   return headers;
 };
@@ -39,7 +39,7 @@ export const mapAppealFromApi = (apiData) => ({
   creatorName: apiData.creator_name || "",
   updaterName: apiData.updater_name || "",
   createdAt: apiData.created_at || "",
-  updatedAt: apiData.updated_at || ""
+  updatedAt: apiData.updated_at || "",
 });
 
 export const mapAppealToApi = (formData) => {
@@ -51,12 +51,14 @@ export const mapAppealToApi = (formData) => {
     source_system: String(formData.system || "MOBILE").toUpperCase(),
     subject: String(formData.subject || "").trim(),
     direction: String(formData.direction || "").trim(),
-    client_code: String(formData.clientCode || "").trim() || `CLI-${Math.floor(10000 + Math.random() * 90000)}`,
+    client_code:
+      String(formData.clientCode || "").trim() ||
+      `CLI-${Math.floor(10000 + Math.random() * 90000)}`,
     card: String(formData.cardNumber || "").replace(/\D/g, ""), // Keep only digits
     appeal_date: formData.date || new Date().toISOString().split("T")[0],
     damage_amount: Number(formData.lossAmount) || 0,
     comment: String(formData.comment || "").trim(),
-    created_by: formData.operatorId || null
+    created_by: formData.operatorId || null,
   };
 };
 
@@ -79,7 +81,7 @@ export const mapDropCardFromApi = (apiData) => {
     creatorName: apiData.creator_name || "",
     updaterName: apiData.updater_name || "",
     createdAt: apiData.created_at || "",
-    updatedAt: apiData.updated_at || ""
+    updatedAt: apiData.updated_at || "",
   };
 };
 
@@ -95,7 +97,7 @@ export const mapDropCardToApi = (formData) => {
     blocked_at: blockedAt,
     balance: Number(formData.balance) || 0,
     comment: String(formData.comment || "").trim(),
-    blocked_by: formData.operatorId || null
+    blocked_by: formData.operatorId || null,
   };
 };
 
@@ -105,14 +107,22 @@ export const mapUserFromApi = (apiData) => ({
   email: apiData.email || `${apiData.username}@bank.uz`,
   role: apiData.role || (apiData.is_admin === 1 ? "Admin" : "User"),
   createdDate: apiData.createdDate || apiData.created_at || "",
-  status: apiData.status || "Faol"
+  status: apiData.status || "Faol",
 });
 
 export const mapUserToApi = (formData) => {
   return {
-    username: String(formData.username || "").toLowerCase().replace(/\s/g, ""),
-    is_admin: formData.role === "Admin" ? 1 : 0,
-    created_at: formData.createdDate || new Date().toLocaleDateString("uz-UZ", { day: 'numeric', month: 'long', year: 'numeric' })
+    username: String(formData.username || "")
+      .toLowerCase()
+      .replace(/\s/g, ""),
+    role: formData.role === "Admin" ? 1 : 0,
+    created_at:
+      formData.createdDate ||
+      new Date().toLocaleDateString("uz-UZ", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }),
   };
 };
 
@@ -131,11 +141,11 @@ export const mapFraudFromApi = (apiData) => ({
   updatedById: apiData.updated_by ? String(apiData.updated_by) : "",
   createdAt: apiData.created_at || "",
   updatedAt: apiData.updated_at || "",
-  attachments: (apiData.attachments || []).map(a => ({
+  attachments: (apiData.attachments || []).map((a) => ({
     id: a.id ? String(a.id) : "",
     originalName: a.originalName || a.original_name || "",
-    filePath: a.filePath || a.file_path || ""
-  }))
+    filePath: a.filePath || a.file_path || "",
+  })),
 });
 
 // ==========================================
@@ -146,21 +156,23 @@ export const apiService = {
   // 1. Authentication
   login: async (username, password) => {
     const res = await fetch(`${BASE_URL}/auth/login`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ username, password })
+      body: JSON.stringify({ username, password }),
     });
 
     if (!res.ok) {
       const errData = await res.json();
-      throw new Error(errData.message || 'Foydalanuvchi nomi yoki parol noto\'g\'ri!');
+      throw new Error(
+        errData.message || "Foydalanuvchi nomi yoki parol noto'g'ri!",
+      );
     }
 
     const data = await res.json();
     if (data.token) {
-      localStorage.setItem('active_token', data.token);
+      localStorage.setItem("active_token", data.token);
     }
     return mapUserFromApi(data.user);
   },
@@ -168,49 +180,49 @@ export const apiService = {
   // 2. Appeals (Murojaatlar)
   getAppeals: async (options = {}) => {
     const params = new URLSearchParams();
-    if (options.page) params.append('page', options.page);
-    if (options.limit) params.append('limit', options.limit);
-    if (options.search) params.append('search', options.search);
-    if (options.startDate) params.append('startDate', options.startDate);
-    if (options.endDate) params.append('endDate', options.endDate);
-    if (options.direction) params.append('direction', options.direction);
-    if (options.system) params.append('system', options.system);
+    if (options.page) params.append("page", options.page);
+    if (options.limit) params.append("limit", options.limit);
+    if (options.search) params.append("search", options.search);
+    if (options.startDate) params.append("startDate", options.startDate);
+    if (options.endDate) params.append("endDate", options.endDate);
+    if (options.direction) params.append("direction", options.direction);
+    if (options.system) params.append("system", options.system);
 
-    const queryStr = params.toString() ? `?${params.toString()}` : '';
+    const queryStr = params.toString() ? `?${params.toString()}` : "";
     const res = await fetch(`${BASE_URL}/appeals${queryStr}`, {
-      headers: getHeaders()
+      headers: getHeaders(),
     });
 
     if (!res.ok) {
       if (res.status === 401 || res.status === 403) {
-        localStorage.removeItem('active_user');
-        localStorage.removeItem('active_token');
-        window.location.href = '/login';
-        throw new Error('Sessiya muddati tugadi, qaytadan kiring.');
+        localStorage.removeItem("active_user");
+        localStorage.removeItem("active_token");
+        window.location.href = "/login";
+        throw new Error("Sessiya muddati tugadi, qaytadan kiring.");
       }
       const errData = await res.json();
-      throw new Error(errData.message || 'Murojaatlarni yuklashda xatolik!');
+      throw new Error(errData.message || "Murojaatlarni yuklashda xatolik!");
     }
 
     const raw = await res.json();
     return {
       data: raw.data.map(mapAppealFromApi),
       pagination: raw.pagination,
-      stats: raw.stats
+      stats: raw.stats,
     };
   },
 
   createAppeal: async (appealData) => {
     const cleanAppeal = mapAppealToApi(appealData);
     const res = await fetch(`${BASE_URL}/appeals`, {
-      method: 'POST',
+      method: "POST",
       headers: getHeaders(),
-      body: JSON.stringify(cleanAppeal)
+      body: JSON.stringify(cleanAppeal),
     });
 
     if (!res.ok) {
       const errData = await res.json();
-      throw new Error(errData.message || 'Murojaatni saqlashda xatolik!');
+      throw new Error(errData.message || "Murojaatni saqlashda xatolik!");
     }
 
     const created = await res.json();
@@ -220,14 +232,14 @@ export const apiService = {
   updateAppeal: async (id, appealData) => {
     const cleanAppeal = mapAppealToApi(appealData);
     const res = await fetch(`${BASE_URL}/appeals/${id}`, {
-      method: 'PUT',
+      method: "PUT",
       headers: getHeaders(),
-      body: JSON.stringify(cleanAppeal)
+      body: JSON.stringify(cleanAppeal),
     });
 
     if (!res.ok) {
       const errData = await res.json();
-      throw new Error(errData.message || 'Murojaatni yangilashda xatolik!');
+      throw new Error(errData.message || "Murojaatni yangilashda xatolik!");
     }
 
     const updated = await res.json();
@@ -237,41 +249,41 @@ export const apiService = {
   // 3. Drop Cards
   getDropCards: async (options = {}) => {
     const params = new URLSearchParams();
-    if (options.page) params.append('page', options.page);
-    if (options.limit) params.append('limit', options.limit);
-    if (options.search) params.append('search', options.search);
-    if (options.startDate) params.append('startDate', options.startDate);
-    if (options.endDate) params.append('endDate', options.endDate);
+    if (options.page) params.append("page", options.page);
+    if (options.limit) params.append("limit", options.limit);
+    if (options.search) params.append("search", options.search);
+    if (options.startDate) params.append("startDate", options.startDate);
+    if (options.endDate) params.append("endDate", options.endDate);
 
-    const queryStr = params.toString() ? `?${params.toString()}` : '';
+    const queryStr = params.toString() ? `?${params.toString()}` : "";
     const res = await fetch(`${BASE_URL}/drop-cards${queryStr}`, {
-      headers: getHeaders()
+      headers: getHeaders(),
     });
 
     if (!res.ok) {
       const errData = await res.json();
-      throw new Error(errData.message || 'Drop kartalarni yuklashda xatolik!');
+      throw new Error(errData.message || "Drop kartalarni yuklashda xatolik!");
     }
 
     const raw = await res.json();
     return {
       data: raw.data.map(mapDropCardFromApi),
       pagination: raw.pagination,
-      stats: raw.stats
+      stats: raw.stats,
     };
   },
 
   createDropCard: async (cardData) => {
     const cleanCard = mapDropCardToApi(cardData);
     const res = await fetch(`${BASE_URL}/drop-cards`, {
-      method: 'POST',
+      method: "POST",
       headers: getHeaders(),
-      body: JSON.stringify(cleanCard)
+      body: JSON.stringify(cleanCard),
     });
 
     if (!res.ok) {
       const errData = await res.json();
-      throw new Error(errData.message || 'Drop kartani saqlashda xatolik!');
+      throw new Error(errData.message || "Drop kartani saqlashda xatolik!");
     }
 
     const created = await res.json();
@@ -281,14 +293,14 @@ export const apiService = {
   updateDropCard: async (id, cardData) => {
     const cleanCard = mapDropCardToApi(cardData);
     const res = await fetch(`${BASE_URL}/drop-cards/${id}`, {
-      method: 'PUT',
+      method: "PUT",
       headers: getHeaders(),
-      body: JSON.stringify(cleanCard)
+      body: JSON.stringify(cleanCard),
     });
 
     if (!res.ok) {
       const errData = await res.json();
-      throw new Error(errData.message || 'Drop kartani yangilashda xatolik!');
+      throw new Error(errData.message || "Drop kartani yangilashda xatolik!");
     }
 
     const updated = await res.json();
@@ -298,12 +310,12 @@ export const apiService = {
   // 4. Admin User Management
   getUsers: async () => {
     const res = await fetch(`${BASE_URL}/users`, {
-      headers: getHeaders()
+      headers: getHeaders(),
     });
 
     if (!res.ok) {
       const errData = await res.json();
-      throw new Error(errData.message || 'Xodimlarni yuklashda xatolik!');
+      throw new Error(errData.message || "Xodimlarni yuklashda xatolik!");
     }
 
     const raw = await res.json();
@@ -312,17 +324,17 @@ export const apiService = {
 
   createUser: async (userData) => {
     const cleanUser = mapUserToApi(userData);
-    cleanUser.password = userData.password || 'operator123'; // Standard default password
+    cleanUser.password = userData.password || "operator123"; // Standard default password
 
     const res = await fetch(`${BASE_URL}/users`, {
-      method: 'POST',
+      method: "POST",
       headers: getHeaders(),
-      body: JSON.stringify(cleanUser)
+      body: JSON.stringify(cleanUser),
     });
 
     if (!res.ok) {
       const errData = await res.json();
-      throw new Error(errData.message || 'Xodim yaratishda xatolik!');
+      throw new Error(errData.message || "Xodim yaratishda xatolik!");
     }
 
     const created = await res.json();
@@ -331,13 +343,13 @@ export const apiService = {
 
   deleteUser: async (userId) => {
     const res = await fetch(`${BASE_URL}/users/${userId}`, {
-      method: 'DELETE',
-      headers: getHeaders()
+      method: "DELETE",
+      headers: getHeaders(),
     });
 
     if (!res.ok) {
       const errData = await res.json();
-      throw new Error(errData.message || 'Xodimni o\'chirishda xatolik!');
+      throw new Error(errData.message || "Xodimni o'chirishda xatolik!");
     }
 
     return await res.json();
@@ -345,13 +357,15 @@ export const apiService = {
 
   toggleUserStatus: async (userId) => {
     const res = await fetch(`${BASE_URL}/users/${userId}/status`, {
-      method: 'PATCH',
-      headers: getHeaders()
+      method: "PATCH",
+      headers: getHeaders(),
     });
 
     if (!res.ok) {
       const errData = await res.json();
-      throw new Error(errData.message || 'Xodim statusini o\'zgartirishda xatolik!');
+      throw new Error(
+        errData.message || "Xodim statusini o'zgartirishda xatolik!",
+      );
     }
 
     const updated = await res.json();
@@ -361,12 +375,14 @@ export const apiService = {
   // 5. Fraud Registry (Firibgarlik holatlari)
   getFrauds: async () => {
     const res = await fetch(`${BASE_URL}/fraud`, {
-      headers: getHeaders()
+      headers: getHeaders(),
     });
 
     if (!res.ok) {
       const errData = await res.json();
-      throw new Error(errData.message || 'Firibgarlik holatlarini yuklashda xatolik!');
+      throw new Error(
+        errData.message || "Firibgarlik holatlarini yuklashda xatolik!",
+      );
     }
 
     const raw = await res.json();
@@ -375,16 +391,18 @@ export const apiService = {
 
   createFraud: async (formData) => {
     const res = await fetch(`${BASE_URL}/fraud`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('active_token')}`
+        Authorization: `Bearer ${localStorage.getItem("active_token")}`,
       },
-      body: formData
+      body: formData,
     });
 
     if (!res.ok) {
       const errData = await res.json();
-      throw new Error(errData.message || 'Firibgarlik holatini saqlashda xatolik!');
+      throw new Error(
+        errData.message || "Firibgarlik holatini saqlashda xatolik!",
+      );
     }
 
     const created = await res.json();
@@ -393,13 +411,15 @@ export const apiService = {
 
   deleteFraud: async (fraudId) => {
     const res = await fetch(`${BASE_URL}/fraud/${fraudId}`, {
-      method: 'DELETE',
-      headers: getHeaders()
+      method: "DELETE",
+      headers: getHeaders(),
     });
 
     if (!res.ok) {
       const errData = await res.json();
-      throw new Error(errData.message || 'Firibgarlik holatini o\'chirishda xatolik!');
+      throw new Error(
+        errData.message || "Firibgarlik holatini o'chirishda xatolik!",
+      );
     }
 
     return await res.json();
@@ -407,21 +427,23 @@ export const apiService = {
 
   updateFraud: async (fraudId, formData) => {
     const res = await fetch(`${BASE_URL}/fraud/${fraudId}`, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('active_token')}`
+        Authorization: `Bearer ${localStorage.getItem("active_token")}`,
       },
-      body: formData
+      body: formData,
     });
 
     if (!res.ok) {
       const errData = await res.json();
-      throw new Error(errData.message || 'Firibgarlik holatini yangilashda xatolik!');
+      throw new Error(
+        errData.message || "Firibgarlik holatini yangilashda xatolik!",
+      );
     }
 
     const updated = await res.json();
     return mapFraudFromApi(updated);
-  }
+  },
 };
 
 export const formatDate = (dateStr) => {
