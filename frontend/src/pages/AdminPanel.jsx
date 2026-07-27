@@ -76,8 +76,7 @@ const AdminPanel = () => {
     const newUser = {
       username: formUsername,
       role: formRole,
-      password: formPassword,
-      status: 'Faol'
+      password: formPassword
     };
 
     try {
