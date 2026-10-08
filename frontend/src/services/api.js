@@ -307,6 +307,20 @@ export const apiService = {
     return mapDropCardFromApi(updated);
   },
 
+  deleteDropCard: async (id) => {
+    const res = await fetch(`${BASE_URL}/drop-cards/${id}`, {
+      method: "DELETE",
+      headers: getHeaders(),
+    });
+
+    if (!res.ok) {
+      const errData = await res.json();
+      throw new Error(errData.message || "Drop kartani o'chirishda xatolik!");
+    }
+
+    return await res.json();
+  },
+
   // 4. Admin User Management
   getUsers: async () => {
     const res = await fetch(`${BASE_URL}/users`, {

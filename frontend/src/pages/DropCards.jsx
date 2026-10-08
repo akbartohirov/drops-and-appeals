@@ -8,6 +8,7 @@ import {
   Calendar,
   Eye,
   Pencil,
+  Trash2,
   CheckCircle,
   CreditCard,
   User,
@@ -189,6 +190,22 @@ const DropCards = () => {
   const openDetail = (card) => {
     setSelectedCard(card);
     setIsDetailModalOpen(true);
+  };
+
+  const handleDeleteCard = async (card) => {
+    if (window.confirm(`Haqiqatan ham ${formatCardSpaced(card.cardNumber)} kartasini o'chirib tashlamoqchimisiz?`)) {
+      try {
+        await apiService.deleteDropCard(card.id);
+        const newPage = (cards.length === 1 && currentPage > 1) ? currentPage - 1 : currentPage;
+        if (newPage !== currentPage) {
+          setCurrentPage(newPage);
+        } else {
+          await fetchCards(currentPage, pageSize);
+        }
+      } catch (err) {
+        alert("Drop kartani o'chirishda xatolik: " + err.message);
+      }
+    }
   };
 
   // Excel headers
@@ -421,6 +438,13 @@ const DropCards = () => {
                           title="Tahrirlash"
                         >
                           <Pencil className="w-5 h-5" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteCard(card)}
+                          className="text-error hover:bg-error-container/20 p-2 rounded-lg transition-all duration-200 active:scale-90"
+                          title="O'chirish"
+                        >
+                          <Trash2 className="w-5 h-5" />
                         </button>
                       </td>
                     </tr>

@@ -169,3 +169,21 @@ exports.updateDropCard = async (req, res) => {
   }
 };
 
+exports.deleteDropCard = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const stmt = db.prepare("DELETE FROM drop_cards WHERE id = ?");
+    const result = stmt.run(id);
+
+    if (result.changes === 0) {
+      return res.status(404).json({ message: "Karta topilmadi!" });
+    }
+
+    res.json({ success: true, id });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Drop kartani o'chirishda xatolik!" });
+  }
+};
+
