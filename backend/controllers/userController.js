@@ -3,11 +3,11 @@ const bcrypt = require("bcryptjs");
 
 exports.getUsers = async (req, res) => {
   try {
-    const users = db.prepare("SELECT id, username, is_admin, created_at FROM users").all();
+    const users = await db.queryAll("SELECT id, username, is_admin, created_at FROM users ORDER BY id ASC");
     const mappedUsers = users.map(u => ({
       id: u.id,
       username: u.username,
-      role: u.is_admin === 1 ? "Admin" : "User",
+      role: (u.is_admin === 1 || u.is_admin === true || u.is_admin === "1") ? "Admin" : "User",
       createdDate: u.created_at,
     }));
     res.json(mappedUsers);
@@ -30,21 +30,22 @@ exports.createUser = async (req, res) => {
   const createdDate = new Date().toLocaleDateString("uz-UZ", { day: "numeric", month: "long", year: "numeric" });
 
   try {
-    const stmt = db.prepare("INSERT INTO users (username, password_hash, is_admin, created_at) VALUES (?, ?, ?, ?)");
-    const info = stmt.run(cleanUsername, hash, isAdmin, createdDate);
+    const created = await db.queryOne(
+      "INSERT INTO users (username, password_hash, is_admin, created_at) VALUES (?, ?, ?, ?) RETURNING id, username, is_admin, created_at",
+      [cleanUsername, hash, isAdmin, createdDate]
+    );
 
-    const created = db.prepare("SELECT id, username, is_admin, created_at FROM users WHERE id = ?").get(info.lastInsertRowid);
     res.status(201).json({
       id: created.id,
       username: created.username,
       email: `${created.username}@bank.uz`,
-      role: created.is_admin === 1 ? "Admin" : "User",
+      role: (created.is_admin === 1 || created.is_admin === true || created.is_admin === "1") ? "Admin" : "User",
       createdDate: created.created_at,
       status: "Faol"
     });
   } catch (err) {
     console.error(err);
-    if (err.message.includes("UNIQUE")) {
+    if (err.code === "23505" || (err.message && err.message.toUpperCase().includes("UNIQUE"))) {
       return res.status(400).json({ message: "Ushbu foydalanuvchi nomi band!" });
     }
     res.status(500).json({ message: "Xodim yaratishda xatolik!" });
@@ -55,10 +56,9 @@ exports.deleteUser = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const stmt = db.prepare("DELETE FROM users WHERE id = ?");
-    const result = stmt.run(id);
+    const result = await db.query("DELETE FROM users WHERE id = ?", [id]);
 
-    if (result.changes === 0) {
+    if (result.rowCount === 0) {
       return res.status(404).json({ message: "Foydalanuvchi topilmadi!" });
     }
 
@@ -73,7 +73,7 @@ exports.toggleUserStatus = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const user = db.prepare("SELECT * FROM users WHERE id = ?").get(id);
+    const user = await db.queryOne("SELECT * FROM users WHERE id = ?", [id]);
     if (!user) {
       return res.status(404).json({ message: "Foydalanuvchi topilmadi!" });
     }
@@ -82,7 +82,7 @@ exports.toggleUserStatus = async (req, res) => {
       id: user.id,
       username: user.username,
       email: `${user.username}@bank.uz`,
-      role: user.is_admin === 1 ? "Admin" : "User",
+      role: (user.is_admin === 1 || user.is_admin === true || user.is_admin === "1") ? "Admin" : "User",
       createdDate: user.created_at,
       status: "Faol"
     });

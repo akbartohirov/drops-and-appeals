@@ -12,20 +12,20 @@ exports.getAppeals = async (req, res) => {
     if (search && search.trim() !== "") {
       const cleanSearch = search.replace(/\D/g, "");
       if (cleanSearch !== "") {
-        conditions.push("(applicant_name LIKE ? OR client_code LIKE ? OR card LIKE ?)");
+        conditions.push("(applicant_name ILIKE ? OR client_code ILIKE ? OR card LIKE ?)");
         params.push(`%${search.trim()}%`, `%${search.trim()}%`, `%${cleanSearch}%`);
       } else {
-        conditions.push("(applicant_name LIKE ? OR client_code LIKE ?)");
+        conditions.push("(applicant_name ILIKE ? OR client_code ILIKE ?)");
         params.push(`%${search.trim()}%`, `%${search.trim()}%`);
       }
     }
 
     if (startDate && startDate.trim() !== "") {
-      conditions.push("appeal_date >= ?");
+      conditions.push("LEFT(appeal_date::text, 10) >= ?");
       params.push(startDate.trim());
     }
     if (endDate && endDate.trim() !== "") {
-      conditions.push("appeal_date <= ?");
+      conditions.push("LEFT(appeal_date::text, 10) <= ?");
       params.push(endDate.trim());
     }
 
@@ -47,41 +47,42 @@ exports.getAppeals = async (req, res) => {
 
     query += " ORDER BY appeal_date DESC, appeals.created_at DESC";
 
-    const totalCountResult = db.prepare(countQuery).get(...params);
-    const totalItems = totalCountResult.count || 0;
+    const totalCountResult = await db.queryOne(countQuery, params);
+    const totalItems = parseInt(totalCountResult?.count || 0, 10);
 
     let appeals;
     if (limit === "all") {
-      appeals = db.prepare(query).all(...params);
+      appeals = await db.queryAll(query, params);
     } else {
-      const pageNum = parseInt(page) || 1;
-      const limitNum = parseInt(limit) || 10;
+      const pageNum = parseInt(page, 10) || 1;
+      const limitNum = parseInt(limit, 10) || 10;
       const offset = (pageNum - 1) * limitNum;
 
       const paginatedQuery = `${query} LIMIT ? OFFSET ?`;
-      appeals = db.prepare(paginatedQuery).all(...params, limitNum, offset);
+      appeals = await db.queryAll(paginatedQuery, [...params, limitNum, offset]);
     }
 
     // Calculate system statistics (unfiltered / overall)
     const currentMonthStr = new Date().toISOString().slice(0, 7); // "YYYY-MM"
 
-    const totalStats = db.prepare("SELECT COUNT(*) as count, SUM(damage_amount) as totalLoss FROM appeals").get();
-    const totalAppeals = totalStats.count || 0;
-    const totalLoss = totalStats.totalLoss || 0;
+    const totalStats = await db.queryOne('SELECT COUNT(*) as count, COALESCE(SUM(damage_amount), 0) as "totalLoss" FROM appeals');
+    const totalAppeals = parseInt(totalStats?.count || 0, 10);
+    const totalLoss = Number(totalStats?.totalLoss || 0);
 
-    const currentMonthStats = db.prepare(
-      "SELECT COUNT(*) as count, SUM(damage_amount) as monthLoss FROM appeals WHERE strftime('%Y-%m', appeal_date) = ?"
-    ).get(currentMonthStr);
-    const currentMonthAppeals = currentMonthStats.count || 0;
-    const currentMonthLoss = currentMonthStats.monthLoss || 0;
+    const currentMonthStats = await db.queryOne(
+      'SELECT COUNT(*) as count, COALESCE(SUM(damage_amount), 0) as "monthLoss" FROM appeals WHERE LEFT(appeal_date::text, 7) = ?',
+      [currentMonthStr]
+    );
+    const currentMonthAppeals = parseInt(currentMonthStats?.count || 0, 10);
+    const currentMonthLoss = Number(currentMonthStats?.monthLoss || 0);
 
     res.json({
       data: appeals,
       pagination: {
-        page: limit === "all" ? 1 : (parseInt(page) || 1),
-        limit: limit === "all" ? totalItems : (parseInt(limit) || 10),
+        page: limit === "all" ? 1 : (parseInt(page, 10) || 1),
+        limit: limit === "all" ? totalItems : (parseInt(limit, 10) || 10),
         totalItems,
-        totalPages: limit === "all" ? 1 : Math.ceil(totalItems / (parseInt(limit) || 10))
+        totalPages: limit === "all" ? 1 : Math.ceil(totalItems / (parseInt(limit, 10) || 10))
       },
       stats: {
         totalAppeals,
@@ -108,12 +109,13 @@ exports.createAppeal = async (req, res) => {
   const finalClientCode = client_code || tempCode;
 
   try {
-    const stmt = db.prepare(`
+    const insertQuery = `
       INSERT INTO appeals (applicant_name, phone, address, source_org, source_system, subject, direction, client_code, card, appeal_date, damage_amount, comment, created_by)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `);
+      RETURNING id
+    `;
     
-    const info = stmt.run(
+    const info = await db.queryOne(insertQuery, [
       applicant_name,
       phone,
       address || null,
@@ -127,15 +129,16 @@ exports.createAppeal = async (req, res) => {
       Number(damage_amount) || 0,
       comment || null,
       operatorId
-    );
+    ]);
 
-    const created = db.prepare(`
+    const created = await db.queryOne(`
       SELECT appeals.*, u1.username AS creator_name, u2.username AS updater_name
       FROM appeals
       LEFT JOIN users u1 ON appeals.created_by = u1.id
       LEFT JOIN users u2 ON appeals.updated_by = u2.id
       WHERE appeals.id = ?
-    `).get(info.lastInsertRowid);
+    `, [info.id]);
+
     res.status(201).json(created);
   } catch (err) {
     console.error(err);
@@ -153,13 +156,13 @@ exports.updateAppeal = async (req, res) => {
   }
 
   try {
-    const stmt = db.prepare(`
+    const updateQuery = `
       UPDATE appeals 
       SET applicant_name = ?, phone = ?, address = ?, source_org = ?, source_system = ?, subject = ?, direction = ?, client_code = ?, card = ?, appeal_date = ?, damage_amount = ?, comment = ?, updated_by = ?, updated_at = CURRENT_TIMESTAMP
       WHERE id = ?
-    `);
+    `;
     
-    const info = stmt.run(
+    const info = await db.query(updateQuery, [
       applicant_name,
       phone,
       address || null,
@@ -174,19 +177,19 @@ exports.updateAppeal = async (req, res) => {
       comment || null,
       operatorId,
       id
-    );
+    ]);
 
-    if (info.changes === 0) {
+    if (info.rowCount === 0) {
       return res.status(404).json({ message: "Murojaat topilmadi!" });
     }
 
-    const updated = db.prepare(`
+    const updated = await db.queryOne(`
       SELECT appeals.*, u1.username AS creator_name, u2.username AS updater_name
       FROM appeals
       LEFT JOIN users u1 ON appeals.created_by = u1.id
       LEFT JOIN users u2 ON appeals.updated_by = u2.id
       WHERE appeals.id = ?
-    `).get(id);
+    `, [id]);
 
     res.json(updated);
   } catch (err) {
@@ -194,4 +197,3 @@ exports.updateAppeal = async (req, res) => {
     res.status(500).json({ message: "Murojaatni yangilashda xatolik!" });
   }
 };
-

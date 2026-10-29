@@ -5,27 +5,27 @@ exports.getDropCards = async (req, res) => {
 
   try {
     let query = "SELECT drop_cards.*, u1.username AS creator_name, u2.username AS updater_name FROM drop_cards LEFT JOIN users u1 ON drop_cards.blocked_by = u1.id LEFT JOIN users u2 ON drop_cards.updated_by = u2.id";
-    let countQuery = "SELECT COUNT(*) as count, SUM(balance) as totalAmount FROM drop_cards";
+    let countQuery = 'SELECT COUNT(*) as count, COALESCE(SUM(balance), 0) as "totalAmount" FROM drop_cards';
     let params = [];
     let conditions = [];
 
     if (search && search.trim() !== "") {
       const cleanSearch = search.replace(/\D/g, "");
       if (cleanSearch !== "") {
-        conditions.push("(card_number LIKE ? OR comment LIKE ?)");
+        conditions.push("(card_number LIKE ? OR comment ILIKE ?)");
         params.push(`%${cleanSearch}%`, `%${search.trim()}%`);
       } else {
-        conditions.push("comment LIKE ?");
+        conditions.push("comment ILIKE ?");
         params.push(`%${search.trim()}%`);
       }
     }
 
     if (startDate && startDate.trim() !== "") {
-      conditions.push("date(blocked_at) >= ?");
+      conditions.push("LEFT(blocked_at::text, 10) >= ?");
       params.push(startDate.trim());
     }
     if (endDate && endDate.trim() !== "") {
-      conditions.push("date(blocked_at) <= ?");
+      conditions.push("LEFT(blocked_at::text, 10) <= ?");
       params.push(endDate.trim());
     }
 
@@ -37,37 +37,38 @@ exports.getDropCards = async (req, res) => {
 
     query += " ORDER BY blocked_at DESC, drop_cards.created_at DESC";
 
-    const totalStats = db.prepare(countQuery).get(...params);
-    const totalItems = totalStats.count || 0;
-    const totalFilteredAmount = totalStats.totalAmount || 0;
+    const totalStats = await db.queryOne(countQuery, params);
+    const totalItems = parseInt(totalStats?.count || 0, 10);
+    const totalFilteredAmount = Number(totalStats?.totalAmount || 0);
 
     let cards;
     if (limit === "all") {
-      cards = db.prepare(query).all(...params);
+      cards = await db.queryAll(query, params);
     } else {
-      const pageNum = parseInt(page) || 1;
-      const limitNum = parseInt(limit) || 10;
+      const pageNum = parseInt(page, 10) || 1;
+      const limitNum = parseInt(limit, 10) || 10;
       const offset = (pageNum - 1) * limitNum;
 
       const paginatedQuery = `${query} LIMIT ? OFFSET ?`;
-      cards = db.prepare(paginatedQuery).all(...params, limitNum, offset);
+      cards = await db.queryAll(paginatedQuery, [...params, limitNum, offset]);
     }
 
     // Calculate current month blocked count & sum (overall unfiltered)
     const currentMonthStr = new Date().toISOString().slice(0, 7); // "YYYY-MM"
-    const currentMonthResult = db.prepare(
-      "SELECT COUNT(*) as count, SUM(balance) as totalAmount FROM drop_cards WHERE strftime('%Y-%m', blocked_at) = ?"
-    ).get(currentMonthStr);
-    const currentMonthBlockedCount = currentMonthResult.count || 0;
-    const currentMonthBlockedAmount = currentMonthResult.totalAmount || 0;
+    const currentMonthResult = await db.queryOne(
+      'SELECT COUNT(*) as count, COALESCE(SUM(balance), 0) as "totalAmount" FROM drop_cards WHERE LEFT(blocked_at::text, 7) = ?',
+      [currentMonthStr]
+    );
+    const currentMonthBlockedCount = parseInt(currentMonthResult?.count || 0, 10);
+    const currentMonthBlockedAmount = Number(currentMonthResult?.totalAmount || 0);
 
     res.json({
       data: cards,
       pagination: {
-        page: limit === "all" ? 1 : (parseInt(page) || 1),
-        limit: limit === "all" ? totalItems : (parseInt(limit) || 10),
+        page: limit === "all" ? 1 : (parseInt(page, 10) || 1),
+        limit: limit === "all" ? totalItems : (parseInt(limit, 10) || 10),
         totalItems,
-        totalPages: limit === "all" ? 1 : Math.ceil(totalItems / (parseInt(limit) || 10))
+        totalPages: limit === "all" ? 1 : Math.ceil(totalItems / (parseInt(limit, 10) || 10))
       },
       stats: {
         totalFilteredCount: totalItems,
@@ -96,26 +97,34 @@ exports.createDropCard = async (req, res) => {
   const finalBlockedAt = blocked_at || formattedNowStr;
 
   try {
-    const stmt = db.prepare(`
-      INSERT OR REPLACE INTO drop_cards (card_number, blocked_at, balance, comment, blocked_by)
+    const upsertQuery = `
+      INSERT INTO drop_cards (card_number, blocked_at, balance, comment, blocked_by)
       VALUES (?, ?, ?, ?, ?)
-    `);
+      ON CONFLICT (card_number) DO UPDATE SET
+        blocked_at = EXCLUDED.blocked_at,
+        balance = EXCLUDED.balance,
+        comment = EXCLUDED.comment,
+        blocked_by = EXCLUDED.blocked_by,
+        updated_at = CURRENT_TIMESTAMP
+      RETURNING id
+    `;
 
-    const info = stmt.run(
+    const info = await db.queryOne(upsertQuery, [
       cleanCardNumber,
       finalBlockedAt,
       Number(balance) || 0,
       comment || null,
       operatorId
-    );
+    ]);
 
-    const created = db.prepare(`
+    const created = await db.queryOne(`
       SELECT drop_cards.*, u1.username AS creator_name, u2.username AS updater_name
       FROM drop_cards
       LEFT JOIN users u1 ON drop_cards.blocked_by = u1.id
       LEFT JOIN users u2 ON drop_cards.updated_by = u2.id
       WHERE drop_cards.id = ?
-    `).get(info.lastInsertRowid);
+    `, [info.id]);
+
     res.status(201).json(created);
   } catch (err) {
     console.error(err);
@@ -135,32 +144,32 @@ exports.updateDropCard = async (req, res) => {
   const cleanCardNumber = card_number.replace(/\D/g, "");
 
   try {
-    const stmt = db.prepare(`
+    const updateQuery = `
       UPDATE drop_cards 
       SET card_number = ?, blocked_at = ?, balance = ?, comment = ?, updated_by = ?, updated_at = CURRENT_TIMESTAMP
       WHERE id = ?
-    `);
+    `;
 
-    const info = stmt.run(
+    const info = await db.query(updateQuery, [
       cleanCardNumber,
       blocked_at,
       Number(balance) || 0,
       comment || null,
       operatorId,
       id
-    );
+    ]);
 
-    if (info.changes === 0) {
+    if (info.rowCount === 0) {
       return res.status(404).json({ message: "Karta topilmadi!" });
     }
 
-    const updated = db.prepare(`
+    const updated = await db.queryOne(`
       SELECT drop_cards.*, u1.username AS creator_name, u2.username AS updater_name
       FROM drop_cards
       LEFT JOIN users u1 ON drop_cards.blocked_by = u1.id
       LEFT JOIN users u2 ON drop_cards.updated_by = u2.id
       WHERE drop_cards.id = ?
-    `).get(id);
+    `, [id]);
 
     res.json(updated);
   } catch (err) {
@@ -173,10 +182,9 @@ exports.deleteDropCard = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const stmt = db.prepare("DELETE FROM drop_cards WHERE id = ?");
-    const result = stmt.run(id);
+    const result = await db.query("DELETE FROM drop_cards WHERE id = ?", [id]);
 
-    if (result.changes === 0) {
+    if (result.rowCount === 0) {
       return res.status(404).json({ message: "Karta topilmadi!" });
     }
 
@@ -186,4 +194,3 @@ exports.deleteDropCard = async (req, res) => {
     res.status(500).json({ message: "Drop kartani o'chirishda xatolik!" });
   }
 };
-

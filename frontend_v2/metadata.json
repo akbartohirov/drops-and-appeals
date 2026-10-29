@@ -1,0 +1,6 @@
+{
+  "name": "Sentinel Antifraud - Bank va To'lov Tizimlari Xavfsizlik Platformasi",
+  "description": "Drop kartalarni aniqlash, murojaatlar reyestri, Humo kliring tahlili va DWH orqali firibgarlik monitoringi milliy antifrod tizimi",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

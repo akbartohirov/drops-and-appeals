@@ -12,7 +12,10 @@ exports.login = async (req, res) => {
   }
 
   try {
-    const user = db.prepare("SELECT * FROM users WHERE username = ?").get(username.toLowerCase());
+    const user = await db.queryOne(
+      "SELECT * FROM users WHERE LOWER(username) = LOWER(?)",
+      [username.trim()]
+    );
     
     if (!user) {
       return res.status(401).json({ message: "Foydalanuvchi nomi yoki parol noto'g'ri!" });
@@ -23,7 +26,8 @@ exports.login = async (req, res) => {
       return res.status(401).json({ message: "Foydalanuvchi nomi yoki parol noto'g'ri!" });
     }
 
-    const userRole = user.is_admin === 1 ? "Admin" : "User";
+    const isAdmin = user.is_admin === 1 || user.is_admin === true || user.is_admin === "1";
+    const userRole = isAdmin ? "Admin" : "User";
 
     // Generate Token
     const token = jwt.sign(
