@@ -255,15 +255,9 @@ export const DropCardsListPage: React.FC = () => {
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-              Drop Kartalar Reyestri (Drop Cards List)
+              Drop kartalar (Drop cards list)
             </h1>
-            <span className="font-mono text-xs px-2 py-0.5 rounded bg-red-950 text-red-400 border border-red-900">
-              Bloklanganlar
-            </span>
           </div>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1">
-            Firibgarlik va noqonuniy tranzaksiyalarda foydalanilgan barcha shubhali drop kartalar
-          </p>
         </div>
 
         {/* Primary Action Button: "yangi qator qo'shish funksiyasi" */}

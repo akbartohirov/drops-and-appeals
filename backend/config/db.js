@@ -15,10 +15,10 @@ if (process.env.DATABASE_URL) {
   };
 } else {
   poolConfig = {
-    host: process.env.DB_HOST || process.env.PGHOST || "localhost",
-    port: parseInt(process.env.DB_PORT || process.env.PGPORT || "5432", 10),
-    user: process.env.DB_USER || process.env.PGUSER || "postgres",
-    password: process.env.DB_PASSWORD || process.env.PGPASSWORD || "postgres",
+    host: process.env.PG_HOST || process.env.PGHOST || process.env.DB_HOST || "localhost",
+    port: parseInt(process.env.PG_PORT || process.env.PGPORT || process.env.DB_PORT || "5432", 10),
+    user: process.env.PG_USER || process.env.PGUSER || "postgres",
+    password: process.env.PG_PASSWORD || process.env.PGPASSWORD || "postgres",
     database:
       process.env.DB_NAME || process.env.PGDATABASE || "drops_appeals_db",
     ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: false } : false,

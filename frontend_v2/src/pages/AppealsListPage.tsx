@@ -282,13 +282,7 @@ export const AppealsListPage: React.FC = () => {
             <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
               Murojaatlar Ro'yxati
             </h1>
-            <span className="font-mono text-xs px-2 py-0.5 rounded bg-blue-950 text-blue-400 border border-blue-900">
-              Reyestr
-            </span>
           </div>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1">
-            Mijozlarning shubhali o'tkazmalar, asossiz blokirovka va kiber-firibgarlik bo'yicha e'tiroz va arizalari
-          </p>
         </div>
 
         {/* Primary Action Button: "Eng yuqori qismida yangi murojaat kirish tugmasi bo'lishi kerak" */}

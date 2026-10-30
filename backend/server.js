@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
-require("dotenv").config();
+const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, ".env") });
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -16,6 +17,9 @@ const dropCardRoutes = require("./routes/dropCardRoutes");
 const userRoutes = require("./routes/userRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const fraudRoutes = require("./routes/fraudRoutes");
+const clearingRoutes = require("./routes/clearingRoutes");
+const sqlExplorerRoutes = require("./routes/sqlExplorerRoutes");
+const clearingSyncService = require("./services/clearingSyncService");
 
 // API Routes
 app.use("/api/auth", authRoutes);
@@ -24,6 +28,8 @@ app.use("/api/drop-cards", dropCardRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/fraud", fraudRoutes);
+app.use("/api/clearing", clearingRoutes);
+app.use("/api/sql-explorer", sqlExplorerRoutes);
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {
@@ -31,7 +37,6 @@ app.get("/api/health", (req, res) => {
 });
 
 // Serve Static Frontend files from dist
-const path = require("path");
 app.use(express.static(path.join(__dirname, "../frontend/dist")));
 app.use("/upload_files", express.static(path.join(__dirname, "upload_files")));
 
@@ -48,4 +53,5 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(`Server ${PORT}-portda ishlamoqda.`);
+  clearingSyncService.startClearingScheduler();
 });

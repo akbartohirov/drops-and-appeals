@@ -534,4 +534,27 @@ export const apiService = {
     const updated = await res.json();
     return mapUserFromApi(updated);
   },
+  executeSql: async (queryText: string, targetDb: 'clearing' | 'main' = 'clearing') => {
+    const res = await fetch(`${BASE_URL}/sql-explorer/execute`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify({ query: queryText, targetDb }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || data.message || "SQL so'rovni bajarishda xatolik yuz berdi");
+    }
+    return data;
+  },
+
+  getSqlTables: async (targetDb: 'clearing' | 'main' = 'clearing') => {
+    const res = await fetch(`${BASE_URL}/sql-explorer/tables?targetDb=${targetDb}`, {
+      headers: getHeaders(),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || data.message || "Jadvallarni yuklashda xatolik yuz berdi");
+    }
+    return data;
+  },
 };

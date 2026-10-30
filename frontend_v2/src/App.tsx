@@ -15,6 +15,7 @@ import { FraudListPage } from './pages/FraudListPage';
 import { HumoClearingPage } from './pages/HumoClearingPage';
 import { DroppersFindingPage } from './pages/DroppersFindingPage';
 import { AdminPanelPage } from './pages/AdminPanelPage';
+import { SqlExplorerPage } from './pages/SqlExplorerPage';
 
 import { AppealDetailModal } from './components/modals/AppealDetailModal';
 import { DropCardDetailModal } from './components/modals/DropCardDetailModal';
@@ -53,6 +54,7 @@ const AppContent: React.FC = () => {
           {currentPage === 'humo-clearing' && <HumoClearingPage />}
           {currentPage === 'droppers-find' && <DroppersFindingPage />}
           {currentPage === 'admin-panel' && <AdminPanelPage />}
+          {currentPage === 'sql-explorer' && <SqlExplorerPage />}
         </main>
       </div>
 

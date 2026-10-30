@@ -10,6 +10,7 @@ import {
   Network,
   Users,
   Shield,
+  Database,
 } from 'lucide-react';
 
 interface NavItem {
@@ -20,7 +21,7 @@ interface NavItem {
 }
 
 export const Sidebar: React.FC = () => {
-  const { currentPage, setCurrentPage } = useAntifraud();
+  const { currentPage, setCurrentPage, currentUser } = useAntifraud();
 
   const navItems: NavItem[] = [
     {
@@ -65,6 +66,17 @@ export const Sidebar: React.FC = () => {
       subLabel: 'Foydalanuvchilar boshqaruvi',
       icon: Users,
     },
+  
+    ...(currentUser?.role === 'Admin'
+      ? [
+          {
+            id: 'sql-explorer' as PageType,
+            label: 'PostgreSQL Explorer',
+            subLabel: 'SQL so\'rovlar va jadvallar',
+            icon: Database,
+          },
+        ]
+      : []),
   ];
 
   return (

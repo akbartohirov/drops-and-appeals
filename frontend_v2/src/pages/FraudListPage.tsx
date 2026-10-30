@@ -3,9 +3,10 @@ import { useAntifraud } from '../context/AntifraudContext';
 import { DataTable, ColumnDef } from '../components/common/DataTable';
 import { ModalDialog } from '../components/common/ModalDialog';
 import { FraudCaseItem, AttachedFile } from '../types/antifraud';
-import { formatUzs } from '../utils/rules';
+import { formatUzs, calculateFraudStats } from '../utils/rules';
 import { 
-  FileWarning, 
+  FileWarning,
+  TrendingDown, 
   Calendar, 
   Paperclip, 
   Upload, 
@@ -62,14 +63,14 @@ export const FraudListPage: React.FC = () => {
     });
   }, [fraudCases, startDate, endDate]);
 
-  // Aggregate stats
-  const totalCasesCount = fraudCases.length;
-  const totalDamageSum = fraudCases.reduce((acc, c) => acc + c.totalDamage, 0);
-  const totalBlockedSum = fraudCases.reduce((acc, c) => acc + c.blockedAmount, 0);
-  const totalAttachedFilesCount = fraudCases.reduce(
-    (acc, c) => acc + (c.attachedFiles?.length || 0),
-    0
-  );
+    // Aggregate stats:
+  // 1. Jami holatlar
+  // 2. Jami zarar
+  // 3. Joriy oydagi holatlar
+  // 4. Joriy oydagi zarar
+  const fraudStats = useMemo(() => {
+    return calculateFraudStats(fraudCases);
+  }, [fraudCases]);
 
   // Handle adding new fraud case
   const handleCreateFraudCase = async (e: React.FormEvent) => {
@@ -275,15 +276,9 @@ export const FraudListPage: React.FC = () => {
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-              Firibgarlik Ro'yxati (Fraud List)
+              Fraud List
             </h1>
-            <span className="font-mono text-xs px-2 py-0.5 rounded bg-red-950 text-red-400 border border-red-900">
-              Tergov & Dalillar
-            </span>
           </div>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1">
-            Firibgarlik jinoyatlari ro'yxati va har bir holatga aloqador rasmiy hujjatlar, arizalar va dalillar
-          </p>
         </div>
 
         {/* Primary Action Button: "yangi qator qo'shish funksiyasi" */}
@@ -298,58 +293,69 @@ export const FraudListPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Top 4 Indicators */}
+      {/* 4 Requested Top Indicators:
+          1. Jami holatlar
+          2. Jami zarar
+          3. Joriy oydagi holatlar
+          4. Joriy oydagi zarar */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* 1. Jami holatlar */}
         <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800 shadow-lg space-y-1">
           <div className="flex items-center justify-between text-xs text-slate-400">
-            <span className="font-semibold text-slate-300">Jami Holatlar Soni</span>
+            <span className="font-semibold text-slate-300">Jami Holatlar</span>
             <FileWarning className="w-4 h-4 text-red-400" />
           </div>
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-bold font-mono text-white tabular-nums">
-              {totalCasesCount} ta
+              {fraudStats.totalCases} ta
             </span>
           </div>
-          <p className="text-[11px] text-slate-500">Kiberxavfsizlikda ochilgan ishlar</p>
+          <p className="text-[11px] text-slate-500">Kiberxavfsizlikda ochilgan jami ishlar</p>
         </div>
 
+        {/* 2. Jami zarar */}
         <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800 shadow-lg space-y-1">
           <div className="flex items-center justify-between text-xs text-slate-400">
-            <span className="font-semibold text-slate-300">Yetkazilgan Zarar</span>
-            <ShieldAlert className="w-4 h-4 text-amber-400" />
+            <span className="font-semibold text-slate-300">Jami Zarar</span>
+            <TrendingDown className="w-4 h-4 text-red-400" />
           </div>
           <div className="flex items-baseline gap-2">
             <span className="text-xl sm:text-2xl font-bold font-mono text-red-400 tabular-nums">
-              {formatUzs(totalDamageSum)}
+              {formatUzs(fraudStats.totalDamage)}
             </span>
           </div>
-          <p className="text-[11px] text-slate-500">Da'vo arizalari bo'yicha jami summa</p>
+          <p className="text-[11px] text-slate-500">Da'vo arizalari bo'yicha umumiy summa</p>
         </div>
 
+        {/* 3. Joriy oydagi holatlar */}
         <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800 shadow-lg space-y-1">
           <div className="flex items-center justify-between text-xs text-slate-400">
-            <span className="font-semibold text-emerald-400">Muzlatilgan Mablag'</span>
-            <Lock className="w-4 h-4 text-emerald-400" />
-          </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-xl sm:text-2xl font-bold font-mono text-emerald-400 tabular-nums">
-              {formatUzs(totalBlockedSum)}
-            </span>
-          </div>
-          <p className="text-[11px] text-slate-500">Drop hisoblarda saqlab qolingan</p>
-        </div>
-
-        <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800 shadow-lg space-y-1">
-          <div className="flex items-center justify-between text-xs text-slate-400">
-            <span className="font-semibold text-blue-300">Biriktirilgan Hujjatlar</span>
-            <Paperclip className="w-4 h-4 text-blue-400" />
+            <span className="font-semibold text-blue-300">Joriy Oydagi Holatlar</span>
+            <Calendar className="w-4 h-4 text-blue-400" />
           </div>
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-bold font-mono text-blue-300 tabular-nums">
-              {totalAttachedFilesCount} ta fayl
+              {fraudStats.currentMonthCases} ta
+            </span>
+            <span className="text-xs text-slate-400 font-mono">
+              ({((fraudStats.currentMonthCases / (fraudStats.totalCases || 1)) * 100).toFixed(0)}%)
             </span>
           </div>
-          <p className="text-[11px] text-slate-500">IIB arizasi, sud qarorlari va cheklar</p>
+          <p className="text-[11px] text-slate-500">Shu oyda qayd etilgan holatlar soni</p>
+        </div>
+
+        {/* 4. Joriy oydagi zarar */}
+        <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800 shadow-lg space-y-1">
+          <div className="flex items-center justify-between text-xs text-slate-400">
+            <span className="font-semibold text-amber-300">Joriy Oydagi Zarar</span>
+            <TrendingDown className="w-4 h-4 text-amber-400" />
+          </div>
+          <div className="flex items-baseline gap-2">
+            <span className="text-xl sm:text-2xl font-bold font-mono text-amber-300 tabular-nums">
+              {formatUzs(fraudStats.currentMonthDamage)}
+            </span>
+          </div>
+          <p className="text-[11px] text-slate-500">Shu oyda yetkazilgan zarar miqdori</p>
         </div>
       </div>
 

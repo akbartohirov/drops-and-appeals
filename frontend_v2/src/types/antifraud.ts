@@ -11,7 +11,8 @@ export type PageType =
   | 'fraud-list'
   | 'humo-clearing'
   | 'droppers-find'
-  | 'admin-panel';
+  | 'admin-panel'
+  | 'sql-explorer';
 
 export type SystemUserRole = 'Admin' | 'Operator';
 

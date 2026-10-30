@@ -111,21 +111,36 @@ export function calculateAppealStats(appeals: AppealItem[]): {
 }
 
 /**
- * Computes fraud cases summary statistics
+ * Computes fraud cases summary statistics:
+ * 1. Jami holatlar
+ * 2. Jami zarar
+ * 3. Joriy oydagi holatlar
+ * 4. Joriy oydagi zarar
  */
 export function calculateFraudStats(cases: FraudCaseItem[]): {
   totalCases: number;
   totalDamage: number;
+  currentMonthCases: number;
+  currentMonthDamage: number;
   totalBlocked: number;
   totalFiles: number;
   activeInvestigations: number;
 } {
+  const currentMonthStr = new Date().toISOString().slice(0, 7);
   return cases.reduce(
     (acc, item) => {
+      const damage = Number(item.totalDamage) || 0;
       acc.totalCases += 1;
-      acc.totalDamage += item.totalDamage;
-      acc.totalBlocked += item.blockedAmount;
+      acc.totalDamage += damage;
+      acc.totalBlocked += Number(item.blockedAmount) || 0;
       acc.totalFiles += item.attachedFiles?.length || 0;
+
+      const dateStr = item.detectedDate ? String(item.detectedDate).slice(0, 7) : '';
+      if (dateStr === currentMonthStr) {
+        acc.currentMonthCases += 1;
+        acc.currentMonthDamage += damage;
+      }
+
       if (item.status === 'Ochiq' || item.status === 'Tergovda') {
         acc.activeInvestigations += 1;
       }
@@ -134,6 +149,8 @@ export function calculateFraudStats(cases: FraudCaseItem[]): {
     {
       totalCases: 0,
       totalDamage: 0,
+      currentMonthCases: 0,
+      currentMonthDamage: 0,
       totalBlocked: 0,
       totalFiles: 0,
       activeInvestigations: 0,
